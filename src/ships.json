@@ -1,0 +1,23 @@
+
+var ships = [
+    { 
+        image: "ship1.png",
+        size: [48, 48],
+        maxVelocity: 400,
+        acceleration: 100,
+        rotationRate: 90,
+        armor: 100,
+        shields: 50,
+        battleEnergy: 100,
+        battleEnergeyRechargeRate: 10,
+        shieldsRechargeRate: 10,
+        weapon: {
+            image: "yellowball.png",
+            size: [8, 8],
+            damage: 20,
+            lifetime: 0.3,
+            velocity: 500,
+            cost: 8,
+        }
+    }
+]

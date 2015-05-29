@@ -1,0 +1,37 @@
+<html>
+<head>
+<link rel="shortcut icon" href="icon.ico">
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"> </script>
+<script src="ships.json"> </script>
+<script src="helpers.js"> </script>
+<script src="point.js"> </script>
+<script src="controls.js"> </script>
+<script src="player.js"> </script>
+<script src="sprite.js"> </script>
+<script src="starfield.js"> </script>
+<script src="ship.js"> </script>
+<script src="space7.js"> </script>
+
+<style>
+.sprite { position: absolute; margin: 0px; padding 0px; border 0px; }
+.stars { z-index: -100; }
+.shield { position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0.5}
+.ship { z-index: 0;}
+.bar { background: #00AA00; width: 100px; height:6px; margin: 0px; padding 0px; border 3px; display: inline-block}
+.ui {z-index: 10; color: #00AA00; font-family: monospace;}
+</style>
+
+</head>
+<body style='overflow: hidden; background: black'>
+<div id='viewport' style='position: absolute; margin: 0px; padding 0px; border 0px; left: 0; top: 0; overflow: visible; background: transperant; width: 100%; height: 100%;'></div>
+<div id='debug' style='position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0.5; color: #FFFFFF'></div>
+<div id='status' class='ui' style='font-size: 10px; margin: 10px; position: absolute; left: 0px; bottom: 130px'>
+<div id='title' style='width: 100%; text-align: center; font-weight: bold;'>Player</div>
+Position <div id='pos' style='display: inline'></div><br>
+Armour: <div id='hp'style='display: inline'></div> <div id='hpBar' class='bar'></div><div id='hpBarBack' class='bar' style='background: #004400;'></div><br>
+Shield: <div id='shield' style='display: inline'></div> <div id='shieldBar' class='bar'></div><div id='shieldBarBack' class='bar' style='background: #004400;'></div><br>
+Energy: <div id='energy' style='display: inline'></div> <div id='energyBar' class='bar'></div><div id='energyBarBack' class='bar' style='background: #004400;'></div><br>
+</div>
+<div id='radar' class='ui' style='overflow: hidden; text-align: center; font-size: 10px; position: absolute; left: 0; bottom: 0; width: 120; height: 120; margin: 10px; background: #004400; border: solid 1px #00AA00; opacity: 0.25'></div>
+</body>
+</html>
