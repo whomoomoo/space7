@@ -62,21 +62,27 @@ function Ship(pos, properties, player) {
         this.setAngle(shipAngle);
     }
     this.fire = function (delta) {
-        if (!isUndef(properties.weapon) && fireDelay <= 0 && battleEnergy >= properties.weapon.cost) {
+        if (!isUndef(properties.weapon) && fireDelay <= 0 && battleEnergy >= properties.weapon.damage) {
             var weaponRadius = Math.max(properties.weapon.image.size[0], properties.weapon.image.size[1])/2;
 
             var direction = Vector.atAngle(this.getAngle());
+
             var vel = this.getVel().add(direction.mult(properties.weapon.velocity))
             var pos = this.getPos().add(direction.mult(this.getRadius()+weaponRadius+1))
             
-            var particle = new Ship(pos, properties.weapon);
-            particle.setVel(vel);
-            
             fireDelay = (weaponRadius*2) / vel.length() * delta;
-            
-            battleEnergy -= properties.weapon.cost;
-            
-            $('#viewport').append(particle.getRootElement());
+
+            for (var i = 0; i < properties.weapon.pattern.length; i++) {
+                pos = this.getPos().add(new Point(properties.weapon.pattern[i][0], properties.weapon.pattern[i][1])
+                        .normalize().rotate(this.getAngle() * Math.PI / 180).mult(this.getRadius()+weaponRadius+1));
+                
+                var particle = new Ship(pos, properties.weapon);
+                particle.setVel(vel);
+                
+                battleEnergy -= properties.weapon.damage;
+                
+                $('#viewport').append(particle.getRootElement());
+            }
         }
     }
     

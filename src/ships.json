@@ -2,7 +2,7 @@
 var ships = [
     { 
         image: {url: "ship.png", size: [48, 48], tile: [0, 0]},
-        maxVelocity: 400,
+        maxVelocity: 250,
         acceleration: 100,
         rotationRate: 90,
         armor: 100,
@@ -10,10 +10,26 @@ var ships = [
         battleEnergy: {max: 100, rechargeRate: 10},
         weapon: {
             image: {url: "bullets.png", size: [8, 8], tile: [3, 0]},
-            damage: 20,
+            pattern: [[0, -1]],
+            damage: 8,
             lifetime: 0.3,
             velocity: 500,
-            cost: 8,
-        }
+        },
+    },
+    {
+        image: {url: "ship.png", size: [48, 48], tile: [1, 0]},
+        maxVelocity: 550,
+        acceleration: 120,
+        rotationRate: 110,
+        armor: 80,
+        shields: {max: 30, rechargeRate: 5},
+        battleEnergy: {max: 25, rechargeRate: 5},
+        weapon: {
+            image: {url: "bullets.png", size: [8, 8], tile: [4, 1]},
+            pattern: [[-0.4, -1], [0.4, -1]],
+            damage: 2,
+            lifetime: 0.55,
+            velocity: 500,
+        },
     }
 ]
