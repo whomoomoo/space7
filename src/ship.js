@@ -14,7 +14,7 @@ function Ship(pos, properties, player) {
         shieldElement = $(document.createElement('img'));
         shieldElement.attr('src', 'shield1.png');
         shieldElement.addClass('shield');
-        shieldElement.css({width: properties.size[0] + 'px', height: properties.size[1] + 'px'});
+        shieldElement.css({width: properties.image.size[0] + 'px', height: properties.image.size[1] + 'px'});
         this.getRootElement().append(shieldElement);
         
         shield = properties.shields;
@@ -35,7 +35,7 @@ function Ship(pos, properties, player) {
             shieldElement.css('opacity', Math.floor(shieldOpacity*10)/10);
         }
     
-    this.loadImage(properties.image, properties.size);
+    Sprite.loadImage(this.getRootElement(), properties.image);
     this.getRootElement().addClass('ship');
     
     // player commands
@@ -63,7 +63,7 @@ function Ship(pos, properties, player) {
     }
     this.fire = function (delta) {
         if (!isUndef(properties.weapon) && fireDelay <= 0 && battleEnergy >= properties.weapon.cost) {
-            var weaponRadius = Math.max(properties.weapon.size[0], properties.weapon.size[1])/2;
+            var weaponRadius = Math.max(properties.weapon.image.size[0], properties.weapon.image.size[1])/2;
 
             var direction = Vector.atAngle(this.getAngle());
             var vel = this.getVel().add(direction.mult(properties.weapon.velocity))

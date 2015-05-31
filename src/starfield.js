@@ -11,7 +11,7 @@ function StarFieldStar(pos, zdistance) {
         this.getRootElement().css("height", "2px");
         this.getRootElement().css("background-color", colours[colour]);
     } else {
-        this.loadImage(boolRand() ? "bigstar1.png" : "bigstar2.png", [6, 6]);
+        Sprite.loadImage(this.getRootElement(), {url: boolRand() ? "bigstar1.png" : "bigstar2.png", size: [6, 6]});
     }
     
     this.update = function(delta) {

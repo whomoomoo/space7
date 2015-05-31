@@ -1,8 +1,7 @@
 
 var ships = [
     { 
-        image: "ship1.png",
-        size: [48, 48],
+        image: {url: "ship1.png", size: [48, 48]},
         maxVelocity: 400,
         acceleration: 100,
         rotationRate: 90,
@@ -12,8 +11,7 @@ var ships = [
         battleEnergeyRechargeRate: 10,
         shieldsRechargeRate: 10,
         weapon: {
-            image: "yellowball.png",
-            size: [8, 8],
+            image: {url: "bullets.png", size: [8, 8], tile: [3, 0]},
             damage: 20,
             lifetime: 0.3,
             velocity: 500,

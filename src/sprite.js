@@ -4,7 +4,6 @@ function Sprite(pos1, lifetime) {
     var vel = new Point(0,0);
     var angle = 0;
     var pos = pos1;
-    var image = null;
     
     element.addClass("sprite");
     element.data('gameData', this);
@@ -34,15 +33,6 @@ function Sprite(pos1, lifetime) {
     this.getRadius = function () {
         return Math.max(element.width()/2, element.height()/2);
     }
-    this.loadImage = function(url, size) {
-        if (image === null) {
-            image = $(document.createElement('img'));
-            element.append(image);
-        }
-        image.attr('src', url);
-        image.css({width: size[0] + 'px', height: size[1] + 'px'});
-        this.updateRenderPos();
-    }
     this.getRootElement = function() { return element; }
     this.update = function (delta) {
         this.setPos(pos.add(vel.mult(delta)));
@@ -62,4 +52,12 @@ function Sprite(pos1, lifetime) {
     };
     
     this.updateRenderPos();    
+}
+
+Sprite.loadImage = function(div, image) {
+    div.css({width: image.size[0] + 'px', height: image.size[1] + 'px'});
+    div.css("background-image",  "url("+image.url+")");
+    if (!isUndef(image.tile)) {
+        div.css("background-position", "-"+image.tile[0]*image.size[0] + 'px -' + image.tile[1]*image.size[1] + 'px');
+    }
 }
