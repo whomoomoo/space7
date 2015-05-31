@@ -20,7 +20,7 @@ var ships = [
         image: {url: "ship.png", size: [48, 48], tile: [1, 0]},
         maxVelocity: 550,
         acceleration: 120,
-        rotationRate: 110,
+        rotationRate: 140,
         armor: 80,
         shields: {max: 30, rechargeRate: 5},
         battleEnergy: {max: 25, rechargeRate: 5},

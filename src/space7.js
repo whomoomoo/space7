@@ -4,7 +4,9 @@ var playerShip;
 $(document).ready(
     function() {
         playerShip = new Ship(new Point(0,0), ships[0], new HumanPlayer(controls));
-        var otherShip = new Ship(new Point(-150,-150), ships[0], new Player());
+        var otherShip = new Ship(new Point(-150,-150), ships[1], new DumbAIPlayer());
+        otherShip.target = playerShip;
+        playerShip.target = otherShip;
         
         $('#viewport').append(playerShip.getRootElement(), otherShip.getRootElement());
 

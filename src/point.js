@@ -31,9 +31,12 @@ function Point(x, y) {
     this.distance = function (pt) {
             return this.sub(pt).length();
         }
-        
+    this.dotProduct = function(pt) {
+            return this.x * pt.x + this.y * pt.y;
+        }
+    
     this.getAsCSSPosition = function () {
-            return {left: x + 'px', top: y + 'px'};
+            return {left: this.x + 'px', top: this.y + 'px'};
         }
 }
 
@@ -56,3 +59,20 @@ Vector.atAngle = function (angle) {
     return new Point(0, -1).rotate(angle * Math.PI / 180);
 }
 
+Math.degToRad = function(deg) {
+    return deg * Math.PI / 180;
+}
+
+Math.radToDeg = function(rad) {
+    return rad / Math.PI * 180;
+}
+
+Math.sign = function(val) {
+    if (val > 0) {
+        return 1;
+    } else if (val < 0){
+        return -1;
+    } else {
+        return 0;
+    }
+}
