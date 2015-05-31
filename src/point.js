@@ -34,7 +34,6 @@ function Point(x, y) {
     this.dotProduct = function(pt) {
             return this.x * pt.x + this.y * pt.y;
         }
-    
     this.getAsCSSPosition = function () {
             return {left: this.x + 'px', top: this.y + 'px'};
         }

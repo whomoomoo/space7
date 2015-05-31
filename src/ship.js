@@ -83,19 +83,26 @@ function Ship(pos, properties, player) {
                 
                 $('#viewport').append(particle.getRootElement());
             }
+            
+            playSound('laser');
         }
     }
     
     // update loop utils
     this.checkForHit = function (otherShip, delta) {
+    
         if (otherShip.getPos().distance(this.getPos()) <= this.getRadius() + otherShip.getRadius()) {
             if (otherShip.getDamage() == 0 && this.getDamage() == 0) {
                 var tmp = otherShip.getVel();
                 otherShip.setVel(this.getVel());
                 this.setVel(tmp);
                 
-                this.setPos(this.getPos().add(this.getVel().mult(delta*3)));
-                otherShip.setPos(otherShip.getPos().add(otherShip.getVel().mult(delta*3)));
+                // ensure we do not overlap
+                var extraDistNeeded = 10 + ((this.getRadius() + otherShip.getRadius()) - otherShip.getPos().distance(this.getPos()));
+                this.setPos(this.getPos().add(this.getVel().normalize().mult(extraDistNeeded/2)));
+                otherShip.setPos(otherShip.getPos().add(otherShip.getVel().normalize().mult(extraDistNeeded/2)));
+                
+                playSound("bounce");
             } else {
                 otherShip.hit(this.getDamage());
                 this.hit(otherShip.getDamage());
