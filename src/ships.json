@@ -23,7 +23,7 @@ var ships = [
         rotationRate: 140,
         armor: 80,
         shields: {max: 30, rechargeRate: 5},
-        battleEnergy: {max: 25, rechargeRate: 5},
+        battleEnergy: {max: 65, rechargeRate: 15},
         weapon: {
             image: {url: "bullets.png", size: [8, 8], tile: [4, 1]},
             pattern: [[-0.4, -1], [0.4, -1]],

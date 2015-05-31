@@ -19,13 +19,14 @@
 .ship { z-index: 0;}
 .bar { background: #00AA00; width: 100px; height:6px; margin: 0px; padding 0px; border 3px; display: inline-block}
 .ui {z-index: 10; color: #00AA00; font-family: monospace;}
+.status {}
 </style>
 
 </head>
 <body style='overflow: hidden; background: black'>
 <div id='viewport' style='position: absolute; margin: 0px; padding 0px; border 0px; left: 0; top: 0; overflow: visible; background: transperant; width: 100%; height: 100%;'></div>
 <div id='debug' style='position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0.5; color: #FFFFFF'></div>
-<div id='status' class='ui' style='font-size: 10px; margin: 10px; position: absolute; left: 0px; bottom: 130px'>
+<div id='status' class='ui status' style='font-size: 10px; margin: 10px; position: absolute; left: 0px; bottom: 130px'>
 <div id='title' style='width: 100%; text-align: center; font-weight: bold;'>Player</div>
 Position <div id='pos' style='display: inline'></div><br>
 Armour: <div id='hp'style='display: inline'></div> <div id='hpBar' class='bar'></div><div id='hpBarBack' class='bar' style='background: #004400;'></div><br>

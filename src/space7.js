@@ -12,7 +12,10 @@ $(document).ready(
 
         initStars();
         
-        updateRadar()
+        updateRadar();
+        
+        cloneStatus('target');
+        
         gameloop();
     });
     
@@ -23,19 +26,29 @@ function cloneStatus(newIdPrefix) {
     newStatus.children().each( function () {
             $(this).attr('id', newIdPrefix + $(this).attr('id'));
         });
+    newStatus.attr('id', newIdPrefix + "status");
+    
+    $('#status').before(newStatus);
+    $('#'+newIdPrefix+'title').html(newIdPrefix);
+
+    var ypos = $('#radar').outerHeight()+10;
+    $('.status').each( function() {
+            $(this).css('bottom', ypos);
+            ypos+=$(this).outerHeight()+10;
+        })
 }
     
-function updateStatus(ship) {
+function updateStatus(ship, prefix) {
     var pos = ship.getPos().div(100);
     $("#pos").text(pos.x.toFixed(2) + ", " + (pos.y*-1).toFixed(2));
 
     var data = [ship.getArmor(), ship.getShield(), ship.getBattleEnergy()];
-    var idPrefix = ["hp", "shield", "energy"];
+    var idPrefix = [prefix+"hp", prefix+"shield", prefix+"energy"];
     
     for (var i = 0; i < 3; i++) {
         var asString = data[i].toPrecision(3);
-        if (asString.length < 4) {
-            asString += "&nbsp;".repeat(4 - asString.length);
+        if (asString.length < 5) {
+            asString += "&nbsp;".repeat(5 - asString.length);
         }
     
         $("#"+idPrefix[i]).html(asString);
@@ -88,14 +101,15 @@ function gameloop() {
             restOfTheShips.each( function() {
                 // the if catches the case of a deleted (dead) sprite
                 if ($(this).data('gameData') && $(obj).data('gameData')) {
-                    $(this).data('gameData').checkForHit($(obj).data('gameData'));
+                    $(this).data('gameData').checkForHit($(obj).data('gameData'), delta);
                 }
             })
         });
         
         updateRadar();
         
-        updateStatus(playerShip);
+        updateStatus(playerShip, '');
+        updateStatus(playerShip.target, 'target');
 
         var viewPortPos = playerShip.getPos().neg().add(Point.windowSize().div(2));
         $('#viewport').css(viewPortPos.getAsCSSPosition());

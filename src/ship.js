@@ -62,7 +62,7 @@ function Ship(pos, properties, player) {
         this.setAngle(shipAngle);
     }
     this.fire = function (delta) {
-        if (!isUndef(properties.weapon) && fireDelay <= 0 && battleEnergy >= properties.weapon.damage) {
+        if (!isUndef(properties.weapon) && fireDelay <= 0 && battleEnergy >= properties.weapon.damage*properties.weapon.pattern.length) {
             var weaponRadius = Math.max(properties.weapon.image.size[0], properties.weapon.image.size[1])/2;
 
             var direction = Vector.atAngle(this.getAngle());
@@ -87,12 +87,15 @@ function Ship(pos, properties, player) {
     }
     
     // update loop utils
-    this.checkForHit = function (otherShip) {
+    this.checkForHit = function (otherShip, delta) {
         if (otherShip.getPos().distance(this.getPos()) <= this.getRadius() + otherShip.getRadius()) {
             if (otherShip.getDamage() == 0 && this.getDamage() == 0) {
                 var tmp = otherShip.getVel();
                 otherShip.setVel(this.getVel());
                 this.setVel(tmp);
+                
+                this.setPos(this.getPos().add(this.getVel().mult(delta*3)));
+                otherShip.setPos(otherShip.getPos().add(otherShip.getVel().mult(delta*3)));
             } else {
                 otherShip.hit(this.getDamage());
                 this.hit(otherShip.getDamage());

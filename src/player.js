@@ -57,7 +57,7 @@ function DumbAIPlayer() {
             ship.backwards(delta);
         }
         
-        if (distance > 200 && Math.abs(angleDiff) < 5) {
+        if (distance < 150 && Math.abs(angleDiff) < 5) {
             ship.fire(delta);
         }
         
