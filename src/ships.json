@@ -1,7 +1,7 @@
 
 var ships = [
     { 
-        image: {url: "ship1.png", size: [48, 48]},
+        image: {url: "ship.png", size: [48, 48], tile: [0, 0]},
         maxVelocity: 400,
         acceleration: 100,
         rotationRate: 90,
