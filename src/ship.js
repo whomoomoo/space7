@@ -90,7 +90,6 @@ function Ship(pos, properties, player) {
     
     // update loop utils
     this.checkForHit = function (otherShip, delta) {
-    
         if (otherShip.getPos().distance(this.getPos()) <= this.getRadius() + otherShip.getRadius()) {
             if (otherShip.getDamage() == 0 && this.getDamage() == 0) {
                 var tmp = otherShip.getVel();
@@ -99,8 +98,12 @@ function Ship(pos, properties, player) {
                 
                 // ensure we do not overlap
                 var extraDistNeeded = 10 + ((this.getRadius() + otherShip.getRadius()) - otherShip.getPos().distance(this.getPos()));
-                this.setPos(this.getPos().add(this.getVel().normalize().mult(extraDistNeeded/2)));
-                otherShip.setPos(otherShip.getPos().add(otherShip.getVel().normalize().mult(extraDistNeeded/2)));
+                if (this.getVel().length() > 0) {
+                    this.setPos(this.getPos().add(this.getVel().normalize().mult(extraDistNeeded/2)));
+                }
+                if (otherShip.getVel().length()> 0) {
+                    otherShip.setPos(otherShip.getPos().add(otherShip.getVel().normalize().mult(extraDistNeeded/2)));
+                }
                 
                 playSound("bounce");
             } else {
@@ -176,5 +179,15 @@ function Ship(pos, properties, player) {
             player.doPlayerInput(delta, this);
         }
     }
-    this.getPlayer = function() { return player; }
+    this.getPlayer = function() {
+        if(!isUndef(player)) {
+            return player; 
+        } else {
+            return null;
+        }
+    }
+    
+    this.isDead = function() {
+        return armor <= 0 && shields <= 0;
+    }
 }

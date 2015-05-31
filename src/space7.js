@@ -1,24 +1,23 @@
 
 var playerShip;
+var paused = true;
+var startMenu = true;
 
 $(document).ready(
     function() {
         playerShip = new Ship(new Point(0,0), ships[0], new HumanPlayer(controls));
         var otherShip = new Ship(new Point(-150,-150), ships[1], new DumbAIPlayer());
-        otherShip.target = playerShip;
-        playerShip.target = otherShip;
         
         $('#viewport').append(playerShip.getRootElement(), otherShip.getRootElement());
 
         initStars();
-        
-        updateRadar();
-        
         cloneStatus('target');
         
+        $('#messageOverlay').html(controlDesc.join('<br>'));
+        
+        renderAll();
         gameloop();
     });
-    
     
 function cloneStatus(newIdPrefix) {
     var newStatus = $('#status').clone();
@@ -39,6 +38,13 @@ function cloneStatus(newIdPrefix) {
 }
     
 function updateStatus(ship, prefix) {
+    if (ship == null) {
+        $('#'+prefix+'status').hide();
+        return;
+    }
+    
+    $('#'+prefix+'status').show();
+
     var pos = ship.getPos().div(100);
     $("#pos").text(pos.x.toFixed(2) + ", " + (pos.y*-1).toFixed(2));
 
@@ -63,7 +69,7 @@ function updateRadar() {
     $(".ship").each(function() {
             var colour;
             if ($(this).data('gameData')) {
-                if (!isUndef($(this).data('gameData').getPlayer())) {
+                if ($(this).data('gameData').getPlayer() != null) {
                     colour = $(this).data('gameData').getPlayer().getTeamColour();
                 } else {
                     colour= 'grey';
@@ -84,14 +90,18 @@ function gameloop() {
         var delta = (current - lastLoopTime) / 1000;
         lastLoopTime = current;
         
-        $(".ship").each( function() {
-            $(this).data('gameData').doPlayerInput(delta);
+        if (paused) {
+            return;
+        }
+        
+        Sprite.foreach(".ship", function() {
+            this.doPlayerInput(delta);
         });
 
         StarFieldStar.viewPortVel = playerShip.getVel();
 
-        $(".sprite").each( function() {
-            $(this).data('gameData').update(delta);
+        Sprite.foreach( function() {
+            this.update(delta);
         });
 
         var allShips = $(".ship");
@@ -106,17 +116,7 @@ function gameloop() {
             })
         });
         
-        updateRadar();
-        
-        updateStatus(playerShip, '');
-        updateStatus(playerShip.target, 'target');
-
-        var viewPortPos = playerShip.getPos().neg().add(Point.windowSize().div(2));
-        $('#viewport').css(viewPortPos.getAsCSSPosition());
-
-        $(".sprite").each( function() {
-            $(this).data('gameData').updateRenderPos();
-        });
+        renderAll();
         
         lastLoopHadError = false;
     } catch (ex) {
@@ -140,3 +140,17 @@ function gameloop() {
         window.setTimeout(gameloop, 10);
     }
 }    
+
+function renderAll() {
+    updateRadar();
+    
+    updateStatus(playerShip, '');
+    updateStatus(playerShip.getPlayer().target, 'target');
+
+    var viewPortPos = playerShip.getPos().neg().add(Point.windowSize().div(2));
+    $('#viewport').css(viewPortPos.getAsCSSPosition());
+
+    Sprite.foreach( function() {
+        this.updateRenderPos();
+    });
+}

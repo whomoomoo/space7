@@ -6,8 +6,8 @@
 <script src="helpers.js"> </script>
 <script src="point.js"> </script>
 <script src="controls.js"> </script>
-<script src="player.js"> </script>
 <script src="sprite.js"> </script>
+<script src="player.js"> </script>
 <script src="starfield.js"> </script>
 <script src="ship.js"> </script>
 <script src="space7.js"> </script>
@@ -20,6 +20,7 @@
 .bar { background: #00AA00; width: 100px; height:6px; margin: 0px; padding 0px; border 3px; display: inline-block}
 .ui {z-index: 10; color: #00AA00; font-family: monospace;}
 .status {}
+.screenbox {position: absolute; margin: 0px; padding 0px; border 0px; left: 0; top: 0; width: 100%; height: 100%; background: transperant; }
 </style>
 
 </head>
@@ -28,8 +29,10 @@
 <audio id='soundlaser' src='laser.wav' preload='auto'></audio>
 <audio id='soundbounce' src='bounce.wav' preload='auto'></audio>
 <audio id='soundexplode' src='EXPLODE.wav' preload='auto'></audio>
-<div id='viewport' style='position: absolute; margin: 0px; padding 0px; border 0px; left: 0; top: 0; overflow: visible; background: transperant; width: 100%; height: 100%;'></div>
-<div id='debug' style='position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0.5; color: #FFFFFF'></div>
+
+<div id='viewport' class='screenbox' style='overflow: visible;'></div>
+<div id='messageOverlay' class='screenbox ui' style='font-size: 25px;text-align: center;display: table-cell;vertical-align: middle'></div>
+<div id='debug' class='screenbox' style='opacity: 0.5; color: #FFFFFF'></div>
 <div id='status' class='ui status' style='font-size: 10px; margin: 10px; position: absolute; left: 0px; bottom: 130px'>
 <div id='title' style='width: 100%; text-align: center; font-weight: bold;'>Player</div>
 Position <div id='pos' style='display: inline'></div><br>

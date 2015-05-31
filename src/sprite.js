@@ -61,3 +61,14 @@ Sprite.loadImage = function(div, image) {
         div.css("background-position", "-"+image.tile[0]*image.size[0] + 'px -' + image.tile[1]*image.size[1] + 'px');
     }
 }
+
+Sprite.foreach = function(selector, fcn) {
+    if (isUndef(fcn)) {
+        fcn = selector;
+        selector = '.sprite';
+    }
+    
+    $(selector).each(function(){
+            fcn.call($(this).data('gameData'));
+        });
+}
