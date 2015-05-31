@@ -6,10 +6,8 @@ var ships = [
         acceleration: 100,
         rotationRate: 90,
         armor: 100,
-        shields: 50,
-        battleEnergy: 100,
-        battleEnergeyRechargeRate: 10,
-        shieldsRechargeRate: 10,
+        shields: {max: 50, rechargeRate: 10},
+        battleEnergy: {max: 100, rechargeRate: 10},
         weapon: {
             image: {url: "bullets.png", size: [8, 8], tile: [3, 0]},
             damage: 20,
