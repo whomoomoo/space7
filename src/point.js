@@ -9,11 +9,11 @@ function Point(x, y) {
     this.sub = function (pt) {
             return new Point(this.x-pt.x,this.y-pt.y);
         }
-    this.mult = function (pt) {
-        return new Point(this.x*pt,this.y*pt);
+    this.mult = function (value) {
+        return new Point(this.x*value,this.y*value);
         }   
-    this.div = function (pt) {
-        return new Point(this.x/pt,this.y/pt);
+    this.div = function (value) {
+        return new Point(this.x/value,this.y/value);
         }
     this.neg = function () {
             return this.mult(-1);
@@ -26,7 +26,12 @@ function Point(x, y) {
             return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
         }
     this.normalize = function () {
-            return new Point(this.x,this.y).div(this.length());
+            var length = this.length()
+            if (length !== 0) {
+                return new Point(this.x,this.y).div(this.length());
+            } else {
+                return this
+            }
         }
     this.distance = function (pt) {
             return this.sub(pt).length();
@@ -37,6 +42,9 @@ function Point(x, y) {
     this.getAsCSSPosition = function () {
             return {left: this.x + 'px', top: this.y + 'px'};
         }
+    this.toString = function() {
+        return "x: " + this.x + " y: " + this.y
+    }
 }
 
 Point.random = function (range) {
