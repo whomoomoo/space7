@@ -69,7 +69,7 @@ function HumanPlayer(controls) {
 function DumbAIPlayer() {
     Player.call(this);
 
-   this.doPlayerInput = function (delta, ship) { 
+    this.doPlayerInput = function (delta, ship) { 
         if (this.target != null && this.target.isDead()) {
             this.target = null;
         }
@@ -123,4 +123,60 @@ function DumbAIPlayer() {
     this.computeDistanceToTarget = function (ship) {
             return this.target.getPos().sub(ship.getPos()).length();
         }
+}
+
+function SmartAIPlayer() {
+    DumbAIPlayer.call(this);
+    var runAway = false;
+
+    this.doPlayerInput = function (delta, ship) { 
+        if (this.target != null && this.target.isDead()) {
+            this.target = null;
+        }
+        if (this.target == null) {
+            this.target = this.findTarget(ship);
+            
+            if (this.target == null) {
+                return null;
+            }
+        }
+   
+        var angleDiff = this.computeDestAngle(ship);
+        var distance = this.computeDistanceToTarget(ship);
+
+        if (ship.getBattleEnergy() < 10) {
+            runAway = true;
+        } else if (ship.getBattleEnergy() > 75) {
+            runAway = false;
+        }
+
+        if (runAway) {
+            angleDiff *= -1;
+        }
+
+        if (Math.abs(angleDiff) > 3) {        
+            if(angleDiff > 0)
+                ship.left(delta);
+            else 
+                ship.right(delta);
+        }
+        
+        if (runAway) {
+          //  if  Math.abs(angleDiff) < 30) {
+                ship.forwards(delta);
+            //}
+        } else {
+            if (distance > 100 && Math.abs(angleDiff) < 30) {
+                ship.forwards(delta);
+            } else if (distance < 50 && Math.abs(angleDiff) < 30) {
+                ship.backwards(delta);
+            }
+        }    
+    
+        if (distance < 150 && Math.abs(angleDiff) < 5 && !runAway) {
+            ship.fire(delta);
+        }
+        
+        // $('#debug').html("destAngle "+angleDiff + "<br>current angle "+ship.getAngle().toFixed(0));
+    }
 }
