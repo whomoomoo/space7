@@ -1,22 +1,25 @@
-function StarFieldStar(pos, zdistance) {
-    Sprite.call(this, pos);
+class StarFieldStar extends Sprite {
+    constructor(pos, zdistance) {
+        super(pos)
     
-    this.getRootElement().addClass("stars");
+        this.rootElement.addClass("stars");
+        this._zdistance = zdistance;
 
-    if (zdistance > 2) {
-        var colours = ["0000FF", "999999", "FFFFFF"];
-        var colour = intRand(0, 2);
-        
-        this.getRootElement().css("width", "2px");
-        this.getRootElement().css("height", "2px");
-        this.getRootElement().css("background-color", colours[colour]);
-    } else {
-        Sprite.loadImage(this.getRootElement(), {url: boolRand() ? "bigstar1.png" : "bigstar2.png", size: [6, 6]});
+        if (zdistance > 2) {
+            var colours = ["0000FF", "999999", "FFFFFF"];
+            var colour = intRand(0, 2);
+            
+            this.rootElement.css("width", "2px");
+            this.rootElement.css("height", "2px");
+            this.rootElement.css("background-color", colours[colour]);
+        } else {
+            Sprite.loadImage(this.rootElement, {url: boolRand() ? "bigstar1.png" : "bigstar2.png", size: [6, 6]});
+        }
     }
     
-    this.update = function(delta) {
-        var vel = StarFieldStar.viewPortVel.mult(delta / zdistance * -1);
-        var newPos = this.getPos().add(vel);
+    update(delta) {
+        var vel = StarFieldStar.viewPortVel.mult(delta / this._zdistance * -1);
+        var newPos = this.pos.add(vel);
         if (newPos.x > $(window).width()) {
             newPos.x -= $(window).width();
         }
@@ -29,7 +32,7 @@ function StarFieldStar(pos, zdistance) {
         if (newPos.y < 0) {
             newPos.y += $(window).height();
         }
-        this.setPos(newPos);
+        this.pos = newPos;
     };
 }
 StarFieldStar.MaxDistance = 11;
@@ -48,6 +51,6 @@ function initStars() {
         var distance = floatRand(1, StarFieldStar.MaxDistance);
         
         var star = new StarFieldStar(Point.random(Point.windowSize()), distance);
-        $('body').append(star.getRootElement());
+        $('body').append(star.rootElement);
     };
 }

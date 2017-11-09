@@ -1,71 +1,67 @@
 
-function Sprite(pos1, lifetime) {
-    var element = $(document.createElement('div'));
-    var vel = new Point(0,0);
-    var angle = 0;
-    var pos = pos1;
-    
-    element.addClass("sprite");
-    element.data('gameData', this);
+class Sprite {
+    constructor(pos, lifetime) {
+        this._element = $(document.createElement('div'));
+        this._vel = new Point(0,0);
+        this._angle = 0;
+        this._pos = pos;
+        this._lifetime = lifetime;
 
-    this.setPos = function (pt) {
-        pos = pt;
+        this._element.addClass("sprite");
+        this._element.data('gameData', this)
+
+        this.updateRenderPos();        
     }
-    this.getPos = function () {
-        return pos;
+
+    get pos () { return this._pos }
+    set pos (point) { this._pos = point }
+    move (vector) {
+        this._pos = this._pos.add(vector)
     }
-    this.move = function (vector) {
-        pos = pos.add(vector)
+
+    get vel () { return this._vel }
+    set vel (vector) { this._vel = vector } 
+
+    set angle(angle) {
+        this._angle = angle % 360;
+        this._element.css("transform", "rotate("+this._angle+"deg)")
     }
-    this.setVel = function (vector) {
-        vel = vector;
+    get angle () { return this._angle }    
+    get size () {
+        return new Point(this._element.width(), this._element.height());
     }
-    this.getVel = function () {
-        return vel;
-    }    
-    this.setAngle = function (angle1) {
-        angle = angle1 % 360;
-        element.css("transform", "rotate("+angle+"deg)")
+    get radius () {
+        return Math.max(this._element.width()/2, this._element.height()/2);
     }
-    this.getAngle = function () {
-        return angle;
-    }  
-    this.getSize = function () {
-        return new Point(element.width(), element.height());
-    }
-    this.getRadius = function () {
-        return Math.max(element.width()/2, element.height()/2);
-    }
-    this.getRootElement = function() { return element; }
-    this.update = function (delta) {
-        this.move(vel.mult(delta));
+    get rootElement() { return this._element; }
+
+    update (delta) {
+        this.move(this._vel.mult(delta));
     
-        if (!isUndef(lifetime)) {
-            lifetime -= delta;
+        if (!isUndef(this._lifetime)) {
+            this._lifetime -= delta;
             
-            if (lifetime <= 0) {
-                element.remove();
+            if (this._lifetime <= 0) {
+                this._element.remove();
             }
         }
     }
-    this.updateRenderPos = function () {
-        var cssPos = pos.sub(this.getSize().div(2));
+    updateRenderPos() {
+        var cssPos = this._pos.sub(this.size.div(2));
         
-        element.css(cssPos.getAsCSSPosition());
+        this._element.css(cssPos.getAsCSSPosition());
     };
-    
-    this.updateRenderPos();    
-}
 
-Sprite.loadImage = function(div, image) {
-    div.css({width: image.size[0] + 'px', height: image.size[1] + 'px'});
-    div.css("background-image",  "url("+image.url+")");
-    if (!isUndef(image.tile)) {
-        div.css("background-position", "-"+image.tile[0]*image.size[0] + 'px -' + image.tile[1]*image.size[1] + 'px');
+    static loadImage(div, image) {
+        div.css({width: image.size[0] + 'px', height: image.size[1] + 'px'});
+        div.css("background-image",  "url("+image.url+")");
+        if (!isUndef(image.tile)) {
+            div.css("background-position", "-"+image.tile[0]*image.size[0] + 'px -' + image.tile[1]*image.size[1] + 'px');
+        }
     }
 }
 
-Sprite.foreach = function(selector, fcn) {
+Sprite.foreach = function (selector, fcn) {
     if (isUndef(fcn)) {
         fcn = selector;
         selector = '.sprite';

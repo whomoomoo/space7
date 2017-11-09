@@ -24,19 +24,19 @@ class Point {
         return new Point(this.x * Math.cos(rad) - this.y * Math.sin(rad),
                          this.x * Math.sin(rad) + this.y * Math.cos(rad));
     }
-    length () {
+    get length() {
         return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
     }
     normalize () {
-            var length = this.length()
+            var length = this.length
             if (length !== 0) {
-                return this.div(this.length());
+                return this.div(length);
             } else {
                 return this
             }
         }
     distance (pt) {
-        return this.sub(pt).length();
+        return this.sub(pt).length;
     }
     dotProduct(pt) {
         return this.x * pt.x + this.y * pt.y;

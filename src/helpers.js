@@ -33,16 +33,6 @@ function boolRand() {
     return intRand(0, 1) === 0;
 }
 
-function createObjectForSuperClassCall(object) {
-    var superClass = new Object();
-    for(var prop in object) {
-        if (typeof object[prop] === 'function') {
-            superClass[prop] = object[prop];
-        }
-    }
-    return superClass;
-}
-
 function parseColour(colourString) {
     var retval = colourString.match(/(\w\w)(\w\w)(\w\w)/);
     

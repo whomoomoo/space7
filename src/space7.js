@@ -8,7 +8,7 @@ $(document).ready(
         playerShip = new Ship(new Point(0,0), ships[0], new HumanPlayer(controls));
         var otherShip = new Ship(new Point(-150,-150), ships[1], new SmartAIPlayer());
         
-        $('#viewport').append(playerShip.getRootElement(), otherShip.getRootElement());
+        $('#viewport').append(playerShip.rootElement, otherShip.rootElement);
 
         initStars();
         cloneStatus('target');
@@ -45,10 +45,10 @@ function updateStatus(ship, prefix) {
     
     $('#'+prefix+'status').show();
 
-    var pos = ship.getPos().div(100);
+    var pos = ship.pos.div(100);
     $("#pos").text(pos.x.toFixed(2) + ", " + (pos.y*-1).toFixed(2));
 
-    var data = [ship.getArmor(), ship.getShield(), ship.getBattleEnergy()];
+    var data = [ship.armor, ship.shield, ship.battleEnergy];
     var idPrefix = [prefix+"hp", prefix+"shield", prefix+"energy"];
     
     for (var i = 0; i < 3; i++) {
@@ -69,12 +69,12 @@ function updateRadar() {
     $(".ship").each(function() {
             var colour;
             if ($(this).data('gameData')) {
-                if ($(this).data('gameData').getPlayer() != null) {
-                    colour = $(this).data('gameData').getPlayer().getTeamColour();
+                if ($(this).data('gameData').player != null) {
+                    colour = $(this).data('gameData').player.getTeamColour();
                 } else {
                     colour= 'grey';
                 }
-                var pos = $(this).data('gameData').getPos().sub(playerShip.getPos()).div(50).add(new Point(59, 59));
+                var pos = $(this).data('gameData').pos.sub(playerShip.pos).div(50).add(new Point(59, 59));
                 radar.append('<div style="position: absolute; background: '+colour+'; left:'+pos.x+'; top:'+pos.y+'; width: 3px; height: 3px; opacity: 1"></div>');
             }
         });
@@ -98,7 +98,7 @@ function gameloop() {
             this.doPlayerInput(delta);
         });
 
-        StarFieldStar.viewPortVel = playerShip.getVel();
+        StarFieldStar.viewPortVel = playerShip.vel;
 
         Sprite.foreach( function() {
             this.update(delta);
@@ -145,9 +145,9 @@ function renderAll() {
     updateRadar();
     
     updateStatus(playerShip, '');
-    updateStatus(playerShip.getPlayer().target, 'target');
+    updateStatus(playerShip.player.target, 'target');
 
-    var viewPortPos = playerShip.getPos().neg().add(Point.windowSize().div(2));
+    var viewPortPos = playerShip.pos.neg().add(Point.windowSize().div(2));
     $('#viewport').css(viewPortPos.getAsCSSPosition());
 
     Sprite.foreach( function() {

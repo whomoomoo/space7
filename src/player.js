@@ -1,5 +1,4 @@
 
-
 function Player() {
     var teamColours = ['#4444FF', '#FF4444', '#FFFF99', '#FF99FF'];
     var teamId = Player.nextTeamId++ % 4;
@@ -25,8 +24,8 @@ function Player() {
         for (var j = (i+1)%ships.length; j != i; j = (j+1)%ships.length) {
             var otherShip = $(ships[j]).data('gameData');
             if(otherShip != null && !isUndef(otherShip) &&
-                otherShip.getPlayer() !== null &&
-                otherShip.getPlayer().getTeamId() != teamId){
+                otherShip.player !== null &&
+                otherShip.player.getTeamId() != teamId){
                 return otherShip;
             }
         }
@@ -44,7 +43,7 @@ function HumanPlayer(controls) {
             this.target = this.findTarget(ship);
             controls.findTarget = false;
         }
-        if (this.target != null && this.target.isDead()) {
+        if (this.target != null && this.target.isDead) {
             this.target = null;
         }
     
@@ -70,7 +69,7 @@ function DumbAIPlayer() {
     Player.call(this);
 
     this.doPlayerInput = function (delta, ship) { 
-        if (this.target != null && this.target.isDead()) {
+        if (this.target != null && this.target.isDead) {
             this.target = null;
         }
         if (this.target == null) {
@@ -101,12 +100,12 @@ function DumbAIPlayer() {
             ship.fire(delta);
         }
         
-        // $('#debug').html("destAngle "+angleDiff + "<br>current angle "+ship.getAngle().toFixed(0));
+        // $('#debug').html("destAngle "+angleDiff + "<br>current angle "+ship.angle.toFixed(0));
     }
     
     this.computeDestAngle = function (ship) {
-            var currentAngle = Vector.atAngle(ship.getAngle()).normalize();
-            var destAngle = this.target.getPos().sub(ship.getPos()).normalize();
+            var currentAngle = Vector.atAngle(ship.angle).normalize();
+            var destAngle = this.target.pos.sub(ship.pos).normalize();
         
             // from cross product
             var direction = currentAngle.x * destAngle.y - currentAngle.y * destAngle.x;
@@ -121,7 +120,7 @@ function DumbAIPlayer() {
         }
     
     this.computeDistanceToTarget = function (ship) {
-            return this.target.getPos().sub(ship.getPos()).length();
+            return this.target.pos.distance(ship.pos);
         }
 }
 
@@ -130,7 +129,7 @@ function SmartAIPlayer() {
     var runAway = false;
 
     this.doPlayerInput = function (delta, ship) { 
-        if (this.target != null && this.target.isDead()) {
+        if (this.target != null && this.target.isDead) {
             this.target = null;
         }
         if (this.target == null) {
@@ -144,9 +143,9 @@ function SmartAIPlayer() {
         var angleDiff = this.computeDestAngle(ship);
         var distance = this.computeDistanceToTarget(ship);
 
-        if (ship.getBattleEnergy() < 10) {
+        if (ship.battleEnergy < 10) {
             runAway = true;
-        } else if (ship.getBattleEnergy() > 75) {
+        } else if (ship.battleEnergy > 75) {
             runAway = false;
         }
 
@@ -177,6 +176,6 @@ function SmartAIPlayer() {
             ship.fire(delta);
         }
         
-        // $('#debug').html("destAngle "+angleDiff + "<br>current angle "+ship.getAngle().toFixed(0));
+        // $('#debug').html("destAngle "+angleDiff + "<br>current angle "+ship.angle.toFixed(0));
     }
 }

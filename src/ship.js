@@ -1,81 +1,80 @@
 
-function Ship(pos, properties, player) {
-    Sprite.call(this, pos, getPropertyWithDefault(properties, 'lifetime', undefined));
-    this.properties = properties;
+class Ship extends Sprite {
+    constructor (pos, properties, player = null) {
+        super (pos, getPropertyWithDefault(properties, 'lifetime', undefined))
+        this.properties = properties;
 
-    var superClass = createObjectForSuperClassCall(this);
-    var fireDelay = 0;
-    var shieldElement;
-    var shields = 0;
-    var armor = 0;
-    var battleEnergy = 0;
-    
-    if (!isUndef(properties.shields)) {
-        shieldElement = $(document.createElement('img'));
-        shieldElement.attr('src', 'shield1.png');
-        shieldElement.addClass('shield');
-        shieldElement.css({width: properties.image.size[0] + 'px', height: properties.image.size[1] + 'px'});
-        this.getRootElement().append(shieldElement);
+        this._fireDelay = 0
+        this._shieldElement
+        this._shields = 0
+        this._armor = 0
+        this._battleEnergy = 0
+        this.player = player            
         
-        shields = properties.shields.max;
-    }
-    if (!isUndef(properties.armor)) {
-        armor = properties.armor;
-    }
-    if (!isUndef(properties.battleEnergy)) {
-        battleEnergy = properties.battleEnergy.max;
-    }
-    if (!isUndef(properties.weapon)) {
-        properties.weapon.maxVelocity = properties.weapon.velocity + properties.maxVelocity;
+        if (!isUndef(properties.shields)) {
+            this._shieldElement = $(document.createElement('img'));
+            this._shieldElement.attr('src', 'shield1.png');
+            this._shieldElement.addClass('shield');
+            this._shieldElement.css({width: properties.image.size[0] + 'px', height: properties.image.size[1] + 'px'});
+            this.rootElement.append(this._shieldElement);
+            
+            this._shields = properties.shields.max;
+        }
+        
+        if (!isUndef(properties.armor)) {
+            this._armor = properties.armor;
+        }
+        if (!isUndef(properties.battleEnergy)) {
+            this._battleEnergy = properties.battleEnergy.max;
+        }
+        if (!isUndef(properties.weapon)) {
+            this.properties.weapon.maxVelocity = properties.weapon.velocity + properties.maxVelocity;
+        }
+
+        Sprite.loadImage(this.rootElement, properties.image);
+        this.rootElement.addClass('ship');
     }
 
-    var updateShieldRender = function () {
-            var shieldOpacity = shields / (properties.shields.max *  2);
+    _updateShieldRender() {
+        var shieldOpacity = this.shields / (this.properties.shields.max *  2);
             
-            shieldElement.css('opacity', Math.floor(shieldOpacity*10)/10);
-        }
-    
-    Sprite.loadImage(this.getRootElement(), properties.image);
-    this.getRootElement().addClass('ship');
+        this._shieldElement.css('opacity', Math.floor(shieldOpacity*10)/10);
+    }
     
     // player commands
-    this.forwards = function (delta) {
-        this.setVel( this.getVel().add(Vector.atAngle(this.getAngle()).mult(properties.acceleration*delta)) );
+    forwards (delta) {
+        this.vel = this.vel.add(Vector.atAngle(this.angle).mult(this.properties.acceleration*delta));
     }
-    this.backwards = function (delta) {
-        this.setVel( this.getVel().add(Vector.atAngle(this.getAngle()).mult(-0.5*properties.acceleration*delta)) );
+    backwards (delta) {
+        this.vel = this.vel.add(Vector.atAngle(this.angle).mult(-0.5*this.properties.acceleration*delta));
     }
-    this.left = function (delta) {
-        var shipAngle = this.getAngle();
-        shipAngle += properties.rotationRate * delta;
-        this.setAngle(shipAngle);
+    left (delta) {
+        this.angle = this.angle + this.properties.rotationRate * delta
     } 
-    this.right = function (delta) {
-        var shipAngle = this.getAngle();
-        shipAngle -= properties.rotationRate * delta;
-        this.setAngle(shipAngle);
+    right (delta) {
+        this.angle = this.angle - this.properties.rotationRate * delta
     }
-    this.fire = function (delta) {
-        if (!isUndef(properties.weapon) && fireDelay <= 0 && battleEnergy >= properties.weapon.damage*properties.weapon.pattern.length) {
-            var weaponRadius = Math.max(properties.weapon.image.size[0], properties.weapon.image.size[1])/2;
+    fire (delta) {
+        if (!isUndef(this.properties.weapon) && this._fireDelay <= 0 && this._battleEnergy >= this.properties.weapon.damage*this.properties.weapon.pattern.length) {
+            var weaponRadius = Math.max(this.properties.weapon.image.size[0], this.properties.weapon.image.size[1])/2;
 
-            var direction = Vector.atAngle(this.getAngle());
+            var direction = Vector.atAngle(this.angle);
 
-            var vel = this.getVel().add(direction.mult(properties.weapon.velocity))
-            var pos = this.getPos().add(direction.mult(this.getRadius()+weaponRadius+1))
+            var vel = this.vel.add(direction.mult(this.properties.weapon.velocity))
+            var pos = this.pos.add(direction.mult(this.radius+weaponRadius+1))
             
-            fireDelay = (weaponRadius*2) / vel.length() * delta;
+            this._fireDelay = (weaponRadius*2) / vel.length * delta;
 
-            for (var i = 0; i < properties.weapon.pattern.length; i++) {
-                pos = this.getPos().add(new Point(properties.weapon.pattern[i][0], properties.weapon.pattern[i][1])
-                        .normalize().rotate(this.getAngle() * Math.PI / 180).mult(this.getRadius()+weaponRadius+1));
+            for (var i = 0; i < this.properties.weapon.pattern.length; i++) {
+                var pos = this.pos.add(new Point(this.properties.weapon.pattern[i][0], this.properties.weapon.pattern[i][1])
+                        .normalize().rotate(this.angle * Math.PI / 180).mult(this.radius+weaponRadius+1));
                 
-                var particle = new Ship(pos, properties.weapon);
-                particle.setVel(vel);
+                var particle = new Ship(pos, this.properties.weapon);
+                particle.vel = vel;
                 
-                battleEnergy -= properties.weapon.damage;
+                this._battleEnergy -= this.properties.weapon.damage;
                 
-                $('#viewport').append(particle.getRootElement());
+                $('#viewport').append(particle.rootElement);
             }
             
             playSound('laser');
@@ -83,115 +82,107 @@ function Ship(pos, properties, player) {
     }
     
     // update loop utils
-    this.checkForHit = function (otherShip) {
-        if (otherShip.getPos().distance(this.getPos()) < this.getRadius() + otherShip.getRadius()) {
-            if (otherShip.getDamage() == 0 && this.getDamage() == 0) {
-                var tmp = otherShip.getVel();
-                otherShip.setVel(this.getVel());
-                this.setVel(tmp);
+    checkForHit (otherShip) {
+        if (otherShip.pos.distance(this.pos) < this.radius + otherShip.radius) {
+            if (otherShip.damage == 0 && this.damage == 0) {
+                [otherShip.vel, this.vel] = [this.vel, otherShip.vel];
                 
                 // ensure we do not overlap
-                var extraDistNeeded = ((this.getRadius() + otherShip.getRadius()) - otherShip.getPos().distance(this.getPos()))
+                var extraDistNeeded = ((this.radius + otherShip.radius) - otherShip.pos.distance(this.pos))
                 
-                if (otherShip.getVel().length() + this.getVel().length() === 0) {
+                if (otherShip.vel.length + this.vel.length === 0) {
                     // use vector between the two ships instead
-                    var vector = this.getPos().sub(otherShip.getPos()).normalize()
+                    var vector = this.pos.sub(otherShip.pos).normalize()
 
-                    this.move(this.getVel().normalize().mult(extraDistNeeded  / 2));
-                    otherShip.move(otherShip.getVel().normalize().mult(extraDistNeeded / 2));
+                    this.move(this.vel.normalize().mult(extraDistNeeded  / 2));
+                    otherShip.move(otherShip.vel.normalize().mult(extraDistNeeded / 2));
                 } else {
-                    var weight = this.getVel().length() / (otherShip.getVel().length() + this.getVel().length())
-                    this.move(this.getVel().normalize().mult(extraDistNeeded * weight));
-                    otherShip.move(otherShip.getVel().normalize().mult(extraDistNeeded * (1 - weight)));
+                    var weight = this.vel.length / (otherShip.vel.length + this.vel.length)
+                    this.move(this.vel.normalize().mult(extraDistNeeded * weight));
+                    otherShip.move(otherShip.vel.normalize().mult(extraDistNeeded * (1 - weight)));
                 }
                 
                 playSound("bounce");
             } else {
-                otherShip.hit(this.getDamage());
-                this.hit(otherShip.getDamage());
+                otherShip.hit(this.damage);
+                this.hit(otherShip.damage);
             }
         }
     }
-    this.hit = function(dmg) {
-        if (shields > 0) {
-            shields -= dmg;
-            if (shields < 0) {
-                dmg = shields * -1;
-                shields = 0;
+    hit(dmg) {
+        if (this._shields > 0) {
+            this._shields -= dmg;
+            if (this._shields < 0) {
+                dmg = this._shields * -1;
+                this._shields = 0;
             } else {
                 dmg = 0;
             }
-            updateShieldRender();
+            this._updateShieldRender();
         }
         
-        if (armor > 0) {
-            armor -= dmg;
+        if (this._armor > 0) {
+            this._armor -= dmg;
         }
         
-        if (armor <= 0 && shields <= 0) {
-            this.getRootElement().remove();
+        if (this.isDead) {
+            this.rootElement.remove();
         }
     }
     
-    this.getDamage = function () {
-        if (isUndef(properties.damage)) {
+    get damage () {
+        if (isUndef(this.properties.damage)) {
             return 0;
         } else {
-            return properties.damage;
+            return this.properties.damage;
         }
     }
-    this.getArmor = function () {
-        return armor / properties.armor * 100;
+    get armor () {
+        return this._armor / this.properties.armor * 100;
     }
-    this.getShield = function () {
-        return shields / properties.shields.max * 100;
+    get shield () {
+        return this._shields / this.properties.shields.max * 100;
     }
-    this.getBattleEnergy = function () {
-        return battleEnergy / properties.battleEnergy.max *100;
+    get battleEnergy () {
+        return this._battleEnergy / this.properties.battleEnergy.max *100;
     }
-    this.setVel = function (pt) {
-        if (pt.length() > properties.maxVelocity) {
-            pt = pt.normalize().mult(properties.maxVelocity);
+    set vel (vector) {
+        if (vector.length > this.properties.maxVelocity) {
+            vector = vector.normalize().mult(this.properties.maxVelocity);
         }
         
-        superClass.setVel(pt);
+        super.vel = vector
     }
+    get vel () { return super.vel }
     
-    this.update = function (delta) {
-        superClass.update(delta);
+    update (delta) {
+        super.update(delta);
         
-        if (fireDelay > 0) {
-            fireDelay -= delta;
-        }
-        
-        if (!isUndef(properties.shields) && shields < properties.shields.max) {
-            shields = Math.min(properties.shields.max, shields + properties.shields.rechargeRate * delta);
-            updateShieldRender();
+        if (this._fireDelay > 0) {
+            this._fireDelay -= delta;
         }
         
-        if (!isUndef(properties.battleEnergy) && battleEnergy < properties.battleEnergy.max) {
-            battleEnergy = Math.min(properties.battleEnergy.max, battleEnergy + properties.battleEnergy.rechargeRate * delta);
+        if (!isUndef(this.properties.shields) && this._shields < this.properties.shields.max) {
+            this._shields = Math.min(this.properties.shields.max, this._shields + this.properties.shields.rechargeRate * delta);
+            this._updateShieldRender();
         }
-    }
-    
-    this.doPlayerInput = function(delta) {
-        if (!isUndef(player)) {
-            player.doPlayerInput(delta, this);
-        }
-    }
-    this.getPlayer = function() {
-        if(!isUndef(player)) {
-            return player; 
-        } else {
-            return null;
+        
+        if (!isUndef(this.properties.battleEnergy) && this._battleEnergy < this.properties.battleEnergy.max) {
+            this._battleEnergy = Math.min(this.properties.battleEnergy.max, this._battleEnergy + this.properties.battleEnergy.rechargeRate * delta);
         }
     }
     
-    this.isDead = function() {
-        return armor <= 0 && shields <= 0;
+    doPlayerInput(delta) {
+        if (this.player != null) {
+            this.player.doPlayerInput(delta, this);
+        }
+    }
+    
+    get isDead () {
+        return this._armor <= 0 && this._shields <= 0;
     }
 
-    this.toDBGString = function () {
-        return "Ship pos: " + this.getPos().toString() + ", vel: " + this.getVel()
+    toDBGString () {
+        return `Ship pos: $(this.pos) vel: $(this.vel)`
     }
 }
