@@ -48,17 +48,11 @@ function Ship(pos, properties, player) {
     this.left = function (delta) {
         var shipAngle = this.getAngle();
         shipAngle += properties.rotationRate * delta;
-        if (shipAngle > 360) {
-            shipAngle -= 360;
-        }
         this.setAngle(shipAngle);
     } 
     this.right = function (delta) {
         var shipAngle = this.getAngle();
         shipAngle -= properties.rotationRate * delta;
-        if (shipAngle < 0) {
-            shipAngle += 360;
-        }
         this.setAngle(shipAngle);
     }
     this.fire = function (delta) {
@@ -89,20 +83,26 @@ function Ship(pos, properties, player) {
     }
     
     // update loop utils
-    this.checkForHit = function (otherShip, delta) {
-        if (otherShip.getPos().distance(this.getPos()) <= this.getRadius() + otherShip.getRadius()) {
+    this.checkForHit = function (otherShip) {
+        if (otherShip.getPos().distance(this.getPos()) < this.getRadius() + otherShip.getRadius()) {
             if (otherShip.getDamage() == 0 && this.getDamage() == 0) {
                 var tmp = otherShip.getVel();
                 otherShip.setVel(this.getVel());
                 this.setVel(tmp);
                 
                 // ensure we do not overlap
-                var extraDistNeeded = 10 + ((this.getRadius() + otherShip.getRadius()) - otherShip.getPos().distance(this.getPos()));
-                if (this.getVel().length() > 0) {
-                    this.setPos(this.getPos().add(this.getVel().normalize().mult(extraDistNeeded/2)));
-                }
-                if (otherShip.getVel().length()> 0) {
-                    otherShip.setPos(otherShip.getPos().add(otherShip.getVel().normalize().mult(extraDistNeeded/2)));
+                var extraDistNeeded = ((this.getRadius() + otherShip.getRadius()) - otherShip.getPos().distance(this.getPos()))
+                
+                if (otherShip.getVel().length() + this.getVel().length() === 0) {
+                    // use vector between the two ships instead
+                    var vector = this.getPos().sub(otherShip.getPos()).normalize()
+
+                    this.move(this.getVel().normalize().mult(extraDistNeeded  / 2));
+                    otherShip.move(otherShip.getVel().normalize().mult(extraDistNeeded / 2));
+                } else {
+                    var weight = this.getVel().length() / (otherShip.getVel().length() + this.getVel().length())
+                    this.move(this.getVel().normalize().mult(extraDistNeeded * weight));
+                    otherShip.move(otherShip.getVel().normalize().mult(extraDistNeeded * (1 - weight)));
                 }
                 
                 playSound("bounce");
@@ -189,5 +189,9 @@ function Ship(pos, properties, player) {
     
     this.isDead = function() {
         return armor <= 0 && shields <= 0;
+    }
+
+    this.toDBGString = function () {
+        return "Ship pos: " + this.getPos().toString() + ", vel: " + this.getVel()
     }
 }

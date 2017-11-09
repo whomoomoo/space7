@@ -14,14 +14,17 @@ function Sprite(pos1, lifetime) {
     this.getPos = function () {
         return pos;
     }
-    this.setVel = function (pt) {
-        vel = pt;
+    this.move = function (vector) {
+        pos = pos.add(vector)
+    }
+    this.setVel = function (vector) {
+        vel = vector;
     }
     this.getVel = function () {
         return vel;
     }    
     this.setAngle = function (angle1) {
-        angle = angle1;
+        angle = angle1 % 360;
         element.css("transform", "rotate("+angle+"deg)")
     }
     this.getAngle = function () {
@@ -35,7 +38,7 @@ function Sprite(pos1, lifetime) {
     }
     this.getRootElement = function() { return element; }
     this.update = function (delta) {
-        this.setPos(pos.add(vel.mult(delta)));
+        this.move(vel.mult(delta));
     
         if (!isUndef(lifetime)) {
             lifetime -= delta;
