@@ -1,22 +1,27 @@
 
 class Sprite {
-    constructor(pos, lifetime) {
+    constructor(pos, lifetime = null) {
         this._element = $(document.createElement('div'));
         this._vel = new Point(0,0);
         this._angle = 0;
-        this._pos = pos;
         this._lifetime = lifetime;
-
+        
         this._element.addClass("sprite");
         this._element.data('gameData', this)
 
-        this.updateRenderPos();        
+        this.pos = pos;      
     }
 
     get pos () { return this._pos }
-    set pos (point) { this._pos = point }
+    set pos (point) { 
+        this._pos = point 
+
+        var cssPos = this._pos.sub(this.size.div(2));
+        
+        this._element.css(cssPos.getAsCSSPosition());
+    }
     move (vector) {
-        this._pos = this._pos.add(vector)
+        this.pos = this.pos.add(vector)
     }
 
     get vel () { return this._vel }
@@ -37,8 +42,8 @@ class Sprite {
 
     update (delta) {
         this.move(this._vel.mult(delta));
-    
-        if (!isUndef(this._lifetime)) {
+
+        if (this._lifetime != null) {
             this._lifetime -= delta;
             
             if (this._lifetime <= 0) {
@@ -46,27 +51,17 @@ class Sprite {
             }
         }
     }
-    updateRenderPos() {
-        var cssPos = this._pos.sub(this.size.div(2));
-        
-        this._element.css(cssPos.getAsCSSPosition());
-    };
 
-    static loadImage(div, image) {
-        div.css({width: image.size[0] + 'px', height: image.size[1] + 'px'});
-        div.css("background-image",  "url("+image.url+")");
-        if (!isUndef(image.tile)) {
-            div.css("background-position", "-"+image.tile[0]*image.size[0] + 'px -' + image.tile[1]*image.size[1] + 'px');
+    loadImage(url, size, tile = null) {
+        this.rootElement.css({width: size[0] + 'px', height: size[1] + 'px'});
+        this.rootElement.css("background-image",  "url("+url+")");
+        if (tile != null) {
+            this.rootElement.css("background-position", "-"+tile[0]*size[0] + 'px -' + tile[1]*size[1] + 'px');
         }
     }
 }
 
-Sprite.foreach = function (selector, fcn) {
-    if (isUndef(fcn)) {
-        fcn = selector;
-        selector = '.sprite';
-    }
-    
+Sprite.foreach = function (fcn, selector = '.sprite') { 
     $(selector).each(function(){
             fcn.call($(this).data('gameData'));
         });

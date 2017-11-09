@@ -7,14 +7,6 @@ function now() {
     return new Date().getTime();
 }
 
-function getPropertyWithDefault(obj, propName, defaultValue) {
-    if (propName in obj) {
-        return obj[propName];
-    } else {
-        return defaultValue;
-    }
-}
-
 function isUndef(value) {
 	return typeof value === 'undefined';
 }

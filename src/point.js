@@ -48,8 +48,12 @@ class Point {
         return `x: $(this.x y: $(this.y`
     }
 
-    static random (range) {
-        if (isUndef(range)) {
+    static fromArray ([x, y]) {
+        return new Point(x, y)
+    }
+
+    static random (range = null) {
+        if (range == null) {
             return new Point(Math.random(), Math.random());
         } else {
             return new Point(intRand(0, range.x), intRand(0, range.y));
@@ -63,6 +67,8 @@ class Point {
     static zero () {
         return new Point(0,0)
     }
+
+
 }
 
 var Vector = {};

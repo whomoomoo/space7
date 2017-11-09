@@ -1,7 +1,7 @@
 
 class Ship extends Sprite {
     constructor (pos, properties, player = null) {
-        super (pos, getPropertyWithDefault(properties, 'lifetime', undefined))
+        super (pos, properties.lifetime)
         this.properties = properties;
 
         this._fireDelay = 0
@@ -31,7 +31,7 @@ class Ship extends Sprite {
             this.properties.weapon.maxVelocity = properties.weapon.velocity + properties.maxVelocity;
         }
 
-        Sprite.loadImage(this.rootElement, properties.image);
+        this.loadImage(properties.image.url, properties.image.size, properties.image.tile);
         this.rootElement.addClass('ship');
     }
 
@@ -66,8 +66,9 @@ class Ship extends Sprite {
             this._fireDelay = (weaponRadius*2) / vel.length * delta;
 
             for (var i = 0; i < this.properties.weapon.pattern.length; i++) {
-                var pos = this.pos.add(new Point(this.properties.weapon.pattern[i][0], this.properties.weapon.pattern[i][1])
-                        .normalize().rotate(this.angle * Math.PI / 180).mult(this.radius+weaponRadius+1));
+                var pos = this.pos.add(Point.fromArray(this.properties.weapon.pattern[i])
+                                .normalize().rotate(this.angle * Math.PI / 180)
+                                .mult(this.radius+weaponRadius+1));
                 
                 var particle = new Ship(pos, this.properties.weapon);
                 particle.vel = vel;
@@ -109,6 +110,7 @@ class Ship extends Sprite {
             }
         }
     }
+    
     hit(dmg) {
         if (this._shields > 0) {
             this._shields -= dmg;

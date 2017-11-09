@@ -1,4 +1,3 @@
-
 var playerShip;
 var paused = true;
 var startMenu = true;
@@ -94,9 +93,9 @@ function gameloop() {
             return;
         }
         
-        Sprite.foreach(".ship", function() {
+        Sprite.foreach(function() {
             this.doPlayerInput(delta);
-        });
+        }, ".ship");
 
         StarFieldStar.viewPortVel = playerShip.vel;
 
@@ -111,7 +110,7 @@ function gameloop() {
             restOfTheShips.each( function() {
                 // the if catches the case of a deleted (dead) sprite
                 if ($(this).data('gameData') && $(obj).data('gameData')) {
-                    $(this).data('gameData').checkForHit($(obj).data('gameData'), delta);
+                    $(this).data('gameData').checkForHit($(obj).data('gameData'));
                 }
             })
         });
@@ -149,8 +148,4 @@ function renderAll() {
 
     var viewPortPos = playerShip.pos.neg().add(Point.windowSize().div(2));
     $('#viewport').css(viewPortPos.getAsCSSPosition());
-
-    Sprite.foreach( function() {
-        this.updateRenderPos();
-    });
 }

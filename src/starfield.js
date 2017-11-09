@@ -13,7 +13,7 @@ class StarFieldStar extends Sprite {
             this.rootElement.css("height", "2px");
             this.rootElement.css("background-color", colours[colour]);
         } else {
-            Sprite.loadImage(this.rootElement, {url: boolRand() ? "bigstar1.png" : "bigstar2.png", size: [6, 6]});
+            this.loadImage(boolRand() ? "bigstar1.png" : "bigstar2.png", [6, 6]);
         }
     }
     
