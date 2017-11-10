@@ -69,13 +69,13 @@ function updateRadar() {
     radar.append('RADAR');
     $(".ship").each(function() {
             var colour;
-            if ($(this).data('gameData')) {
-                if ($(this).data('gameData').player != null) {
-                    colour = $(this).data('gameData').player.teamColour;
+            if ($(this).gameData() != null) {
+                if ($(this).gameData().player != null) {
+                    colour = $(this).gameData().player.teamColour;
                 } else {
                     colour= 'grey';
                 }
-                var pos = $(this).data('gameData').pos.sub(playerShip.pos).div(50).add(new Point(59, 59));
+                var pos = $(this).gameData().pos.sub(playerShip.pos).div(50).add(new Point(59, 59));
                 radar.append('<div style="position: absolute; background: '+colour+'; left:'+pos.x+'; top:'+pos.y+'; width: 3px; height: 3px; opacity: 1"></div>');
             }
         });
@@ -109,8 +109,8 @@ function gameloop() {
             var restOfTheShips = allShips.slice(index+1);
             restOfTheShips.each( function() {
                 // the if catches the case of a deleted (dead) sprite
-                if ($(this).data('gameData') && $(obj).data('gameData')) {
-                    $(this).data('gameData').checkForHit($(obj).data('gameData'));
+                if ($(this).gameData() && $(obj).gameData()) {
+                    $(this).gameData().checkForHit($(obj).gameData());
                 }
             })
         });

@@ -63,6 +63,16 @@ class Sprite {
 
 Sprite.foreach = function (fcn, selector = '.sprite') { 
     $(selector).each(function(){
-            fcn.call($(this).data('gameData'));
+            fcn.call($(this).gameData());
         });
 }
+
+jQuery.fn.extend({
+    gameData : function() {
+        if (!isUndef(this.data('gameData')) ) {
+            return this.data('gameData')
+        } else {
+            return null
+        }
+    }
+});

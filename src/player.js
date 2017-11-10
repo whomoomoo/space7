@@ -25,14 +25,14 @@ class Player {
         var i = 0;
         
         for (i = 0; i < ships.length; i++) {
-            if($(ships[i]).data('gameData') == this.ship){
+            if($(ships[i]).gameData() === this.ship){
                 break;
             }
         }
         
         for (var j = (i+1)%ships.length; j != i; j = (j+1)%ships.length) {
-            var otherShip = $(ships[j]).data('gameData');
-            if(otherShip != null && !isUndef(otherShip) &&
+            var otherShip = $(ships[j]).gameData();
+            if(otherShip != null &&
                 otherShip.player !== null &&
                 otherShip.player.teamId != this.teamId){
                 return otherShip;
