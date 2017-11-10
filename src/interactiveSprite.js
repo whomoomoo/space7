@@ -171,8 +171,8 @@ class InteractiveSprite extends Sprite {
             
             this._fireDelay = (weaponRadius*2.5) / vel.length;
 
-            for (var i = 0; i < this.properties.weapon.pattern.length; i++) {
-                var pos = this.pos.add(Point.fromArray(this.properties.weapon.pattern[i])
+            for (var pattern of this.properties.weapon.pattern) {
+                var pos = this.pos.add(Point.fromArray(pattern)
                                 .normalize().rotate(this.angle * Math.PI / 180)
                                 .mult(this.radius+weaponRadius+1));
                 
