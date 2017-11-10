@@ -1,5 +1,7 @@
 
-class Ship extends Sprite {
+// a sprite that interacts (damages, bounces, etc) with other sprites
+// and is optionally controlled by a player
+class InteractiveSprite extends Sprite {
     constructor (pos, properties, player = null) {
         super (pos, properties.lifetime)
         this.properties = properties;
@@ -11,7 +13,7 @@ class Ship extends Sprite {
         this._battleEnergy = 0
         this.player = player
         if (player != null) {
-            player.ship = this             
+            player.interactiveSprite = this             
         }
         
         if (!isUndef(properties.shields)) {
@@ -35,7 +37,7 @@ class Ship extends Sprite {
         }
 
         this.loadImage(properties.image.url, properties.image.size, properties.image.tile);
-        this.rootElement.addClass('ship');
+        this.rootElement.addClass('interactiveSprite');
     }
 
     _updateShieldRender() {
@@ -45,30 +47,30 @@ class Ship extends Sprite {
     }
     
     // update loop utils
-    checkForHit (otherShip) {
-        if (otherShip.pos.distance(this.pos) < this.radius + otherShip.radius) {
-            if (otherShip.damage == 0 && this.damage == 0) {
-                [otherShip.vel, this.vel] = [this.vel, otherShip.vel];
+    checkForHit (interactiveSprite) {
+        if (interactiveSprite.pos.distance(this.pos) < this.radius + interactiveSprite.radius) {
+            if (interactiveSprite.damage == 0 && this.damage == 0) {
+                [interactiveSprite.vel, this.vel] = [this.vel, interactiveSprite.vel];
                 
                 // ensure we do not overlap
-                var extraDistNeeded = ((this.radius + otherShip.radius) - otherShip.pos.distance(this.pos))
+                var extraDistNeeded = ((this.radius + interactiveSprite.radius) - interactiveSprite.pos.distance(this.pos))
                 
-                if (otherShip.vel.length + this.vel.length === 0) {
-                    // use vector between the two ships instead
-                    var vector = this.pos.sub(otherShip.pos).normalize()
+                if (interactiveSprite.vel.length + this.vel.length === 0) {
+                    // use vector between the two sprites instead
+                    var vector = this.pos.sub(interactiveSprite.pos).normalize()
 
                     this.move(this.vel.normalize().mult(extraDistNeeded  / 2));
-                    otherShip.move(otherShip.vel.normalize().mult(extraDistNeeded / 2));
+                    interactiveSprite.move(interactiveSprite.vel.normalize().mult(extraDistNeeded / 2));
                 } else {
-                    var weight = this.vel.length / (otherShip.vel.length + this.vel.length)
+                    var weight = this.vel.length / (interactiveSprite.vel.length + this.vel.length)
                     this.move(this.vel.normalize().mult(extraDistNeeded * weight));
-                    otherShip.move(otherShip.vel.normalize().mult(extraDistNeeded * (1 - weight)));
+                    interactiveSprite.move(interactiveSprite.vel.normalize().mult(extraDistNeeded * (1 - weight)));
                 }
                 
                 playSound("bounce");
             } else {
-                otherShip.hit(this.damage);
-                this.hit(otherShip.damage);
+                interactiveSprite.hit(this.damage);
+                this.hit(interactiveSprite.damage);
             }
         }
     }
@@ -174,7 +176,7 @@ class Ship extends Sprite {
                                 .normalize().rotate(this.angle * Math.PI / 180)
                                 .mult(this.radius+weaponRadius+1));
                 
-                var particle = new Ship(pos, this.properties.weapon);
+                var particle = new InteractiveSprite(pos, this.properties.weapon);
                 particle.vel = vel;
                 
                 this._battleEnergy -= this.properties.weapon.damage;
@@ -191,6 +193,6 @@ class Ship extends Sprite {
     }
 
     toDBGString () {
-        return `Ship pos: $(this.pos) vel: $(this.vel)`
+        return `InteractiveSprite pos: $(this.pos) vel: $(this.vel)`
     }
 }

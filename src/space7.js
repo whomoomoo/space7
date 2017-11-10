@@ -4,8 +4,8 @@ var startMenu = true;
 
 $(document).ready(
     function() {
-        playerShip = new Ship(new Point(0,0), ships[0], new HumanPlayer(controls));
-        var otherShip = new Ship(new Point(-150,-150), ships[1], new SmartAIPlayer());
+        playerShip = new InteractiveSprite(new Point(0,0), ships[0], new HumanPlayer(controls));
+        var otherShip = new InteractiveSprite(new Point(-150,-150), ships[1], new SmartAIPlayer());
         
         $('#viewport').append(playerShip.rootElement, otherShip.rootElement);
 
@@ -67,7 +67,7 @@ function updateRadar() {
     var radar = $("#radar");
     radar.empty();
     radar.append('RADAR');
-    $(".ship").each(function() {
+    $(".interactiveSprite").each(function() {
             var colour;
             if ($(this).gameData() != null) {
                 if ($(this).gameData().player != null) {
@@ -103,11 +103,11 @@ function gameloop() {
         });
 
         // hit detection
-        var allShips = $(".ship");
-        allShips.each( function(index, obj) {
+        var allInteractiveSprites = $(".interactiveSprite");
+        allInteractiveSprites.each( function(index, obj) {
             // all except current + the ones we already checked
-            var restOfTheShips = allShips.slice(index+1);
-            restOfTheShips.each( function() {
+            var restOfTheInteractiveSprites = allInteractiveSprites.slice(index+1);
+            restOfTheInteractiveSprites.each( function() {
                 // the if catches the case of a deleted (dead) sprite
                 if ($(this).gameData() && $(obj).gameData()) {
                     $(this).gameData().checkForHit($(obj).gameData());

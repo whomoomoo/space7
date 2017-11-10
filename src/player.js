@@ -4,7 +4,7 @@ class Player {
     constructor () {
         this.teamId = Player.nextTeamId++ % 4;
         this.target = null;
-        this.ship = null
+        this.interactiveSprite = null
     }
     
     get teamColour() {
@@ -21,21 +21,21 @@ class Player {
     get shouldFireWeapon() { return null }
     
     findTarget() {
-        var ships = $('.ship');
+        var interactiveSprites = $('.interactiveSprite');
         var i = 0;
         
-        for (i = 0; i < ships.length; i++) {
-            if($(ships[i]).gameData() === this.ship){
+        for (i = 0; i < interactiveSprites.length; i++) {
+            if($(interactiveSprites[i]).gameData() === this.interactiveSprite){
                 break;
             }
         }
         
-        for (var j = (i+1)%ships.length; j != i; j = (j+1)%ships.length) {
-            var otherShip = $(ships[j]).gameData();
-            if(otherShip != null &&
-                otherShip.player !== null &&
-                otherShip.player.teamId != this.teamId){
-                return otherShip;
+        for (var j = (i+1)%interactiveSprites.length; j != i; j = (j+1)%interactiveSprites.length) {
+            var otherInteractiveSprites = $(interactiveSprites[j]).gameData();
+            if(otherInteractiveSprites != null &&
+                otherInteractiveSprites.player !== null &&
+                otherInteractiveSprites.player.teamId != this.teamId){
+                return otherInteractiveSprites;
             }
         }
         
@@ -101,8 +101,8 @@ class DumbAIPlayer extends Player {
     get shouldFireWeapon() { return distance < 150 && Math.abs(angleDiff) < 5 }
     
     computeDestAngle () {
-        var currentAngle = Vector.atAngle(this.ship.angle).normalize();
-        var destAngle = this.target.pos.sub(this.ship.pos).normalize();
+        var currentAngle = Vector.atAngle(this.interactiveSprite.angle).normalize();
+        var destAngle = this.target.pos.sub(this.interactiveSprite.pos).normalize();
     
         // from cross product
         var direction = currentAngle.x * destAngle.y - currentAngle.y * destAngle.x;
@@ -117,7 +117,7 @@ class DumbAIPlayer extends Player {
     }
     
     computeDistanceToTarget () {
-        return this.target.pos.distance(this.ship.pos);
+        return this.target.pos.distance(this.interactiveSprite.pos);
     }
 }
 
@@ -141,9 +141,9 @@ class SmartAIPlayer extends DumbAIPlayer {
             }
         }
    
-        if (this.ship.battleEnergy < 10) {
+        if (this.interactiveSprite.battleEnergy < 10) {
             this._runAway = true;
-        } else if (this.ship.battleEnergy > 75) {
+        } else if (this.interactiveSprite.battleEnergy > 75) {
             this._runAway = false;
         }
 
