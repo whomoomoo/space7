@@ -9,6 +9,8 @@ $(document).ready(
         
         $('#viewport').append(playerShip.rootElement, otherShip.rootElement);
 
+        playerShip.player.findTarget()
+
         initStars();
         cloneStatus('target');
         
@@ -69,7 +71,7 @@ function updateRadar() {
             var colour;
             if ($(this).data('gameData')) {
                 if ($(this).data('gameData').player != null) {
-                    colour = $(this).data('gameData').player.getTeamColour();
+                    colour = $(this).data('gameData').player.teamColour;
                 } else {
                     colour= 'grey';
                 }
@@ -92,17 +94,15 @@ function gameloop() {
         if (paused) {
             return;
         }
-        
-        Sprite.foreach(function() {
-            this.doPlayerInput(delta);
-        }, ".ship");
 
         StarFieldStar.viewPortVel = playerShip.vel;
 
+        // physics and input updates
         Sprite.foreach( function() {
             this.update(delta);
         });
 
+        // hit detection
         var allShips = $(".ship");
         allShips.each( function(index, obj) {
             // all except current + the ones we already checked
