@@ -1,6 +1,6 @@
 
 class StatusBar {
-    constructor (value) {
+    constructor (value, width = 100) {
         this.rootElement = $(document.createElement('div'))
         this.rootElement.addClass("ui")
         this.rootElement.addClass("bar")
@@ -14,11 +14,21 @@ class StatusBar {
         this._value = value
     }
 
-    get value() { return value }
+    get value() { return this._value }
     set value(value) {
-        this._value = Math.abs(value) % 101 
+        this._value = Math.abs(value) % (this._width+1) 
         this._bar.css('width', this._value)
         this._bar.css('height', this.rootElement.height())        
+    }
+    get width() { return this._width }
+    set width(width) {
+        this._width = width 
+        this.rootElement.css('width', this._width)
+        this.rootElement.css('height', this.rootElement.height()) 
+        
+        if (this.value > width) {
+            this.value = width
+        }
     }
 }
 
@@ -62,13 +72,16 @@ function buildStatusUI (ypos, title) {
             let pos = ship.pos.div(100);
             statusUI.position.label.text(pos.x.toFixed(2) + ", " + (pos.y*-1).toFixed(2));
         
-            let displayInfo = [ [ship.armor, statusUI.armor], [ship.shield, statusUI.shields], [ship.battleEnergy, statusUI.energy]] 
+            let displayInfo = [ [ship.armor, statusUI.armor, ship.properties.armor],
+                                [ship.shields, statusUI.shields, ship.properties.shields.max], 
+                                [ship.battleEnergy, statusUI.energy, ship.properties.battleEnergy.max]] 
             
-            for (let [data, ui] of displayInfo) {
+            for (let [data, ui, max] of displayInfo) {
                 let asString = data.toPrecision(3)
             
                 ui.label.text(asString);
                 ui.bar.value = data
+                ui.bar.width = max                
             }
         } 
     }

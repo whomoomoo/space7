@@ -1,4 +1,4 @@
-var teamColours = ['#4444FF', '#FF4444', '#FFFF99', '#FF99FF'];
+let teamColours = ['#4444FF', '#FF4444', '#FFFF99', '#FF99FF'];
 
 class Player {
     constructor () {

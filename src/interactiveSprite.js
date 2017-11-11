@@ -23,7 +23,7 @@ class InteractiveSprite extends Sprite {
             this._shieldElement.css({width: properties.image.size[0] + 'px', height: properties.image.size[1] + 'px'});
             this.rootElement.append(this._shieldElement);
             
-            this._shields = properties.shields.max;
+            this.shields = properties.shields.max;
         }
         
         if (properties.armor !== undefined) {
@@ -38,12 +38,6 @@ class InteractiveSprite extends Sprite {
 
         this.loadImage(properties.image.url, properties.image.size, properties.image.tile);
         this.rootElement.addClass('interactiveSprite');
-    }
-
-    _updateShieldRender() {
-        let shieldOpacity = this._shields / (this.properties.shields.max *  2);
-            
-        this._shieldElement.css('opacity', Math.floor(shieldOpacity*10)/10);
     }
     
     // update loop utils
@@ -76,41 +70,49 @@ class InteractiveSprite extends Sprite {
     }
     
     hit(dmg) {
-        if (this._shields > 0) {
-            this._shields -= dmg;
-            if (this._shields < 0) {
-                dmg = this._shields * -1;
-                this._shields = 0;
+        let shields = this.shields
+        if (shields > 0) {
+            shields -= dmg
+            if (shields < 0) {
+                dmg = shields * -1
+                shields = 0
             } else {
-                dmg = 0;
+                dmg = 0
             }
-            this._updateShieldRender();
+            this.shields = shields
         }
         
         if (this._armor > 0) {
-            this._armor -= dmg;
+            this._armor -= dmg
         }
         
         if (this.isDead) {
-            this.rootElement.remove();
+            this.rootElement.remove()
         }
     }
     
     get damage () {
         if (this.properties.damage === undefined) {
-            return 0;
+            return 0
         } else {
-            return this.properties.damage;
+            return this.properties.damage
         }
     }
     get armor () {
-        return this._armor / this.properties.armor * 100;
+        return this._armor;
     }
-    get shield () {
-        return this._shields / this.properties.shields.max * 100;
+    get shields () {
+        return this._shields
+    }
+    set shields (value) {
+        this._shields = Math.bounds(value, 0, this.properties.shields.max)
+
+        let shieldOpacity = this._shields / (this.properties.shields.max *  2);
+        
+        this._shieldElement.css('opacity', shieldOpacity);
     }
     get battleEnergy () {
-        return this._battleEnergy / this.properties.battleEnergy.max *100;
+        return this._battleEnergy;
     }
     set vel (vector) {
         if (vector.length > this.properties.maxVelocity) {
@@ -151,8 +153,7 @@ class InteractiveSprite extends Sprite {
         }  
         
         if (this.properties.shields !== undefined && this._shields < this.properties.shields.max) {
-            this._shields = Math.min(this.properties.shields.max, this._shields + this.properties.shields.rechargeRate * delta);
-            this._updateShieldRender();
+            this.shields = Math.min(this.properties.shields.max, this._shields + this.properties.shields.rechargeRate * delta);
         }
         
         if (this.properties.battleEnergy !== undefined && this._battleEnergy < this.properties.battleEnergy.max) {

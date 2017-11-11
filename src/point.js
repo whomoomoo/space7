@@ -67,8 +67,6 @@ class Point {
     static zero () {
         return new Point(0,0)
     }
-
-
 }
 
 let Vector = {};
