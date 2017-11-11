@@ -1,6 +1,8 @@
 var playerShip;
 var paused = true;
 var startMenu = true;
+var playerStatus;
+var targetStatus;
 
 $(document).ready(
     function() {
@@ -12,7 +14,11 @@ $(document).ready(
         playerShip.player.findTarget()
 
         initStars();
-        cloneStatus('target');
+        
+        playerStatus = buildStatusUI(200, "Player")
+        targetStatus = buildStatusUI(130, "Target")
+
+        $('body').append(playerStatus.rootElement, targetStatus.rootElement)
         
         $('#messageOverlay').html(controlDesc.join('<br>'));
         
@@ -20,49 +26,6 @@ $(document).ready(
         gameloop();
     });
     
-function cloneStatus(newIdPrefix) {
-    var newStatus = $('#status').clone();
-    
-    newStatus.children().each( function () {
-            $(this).attr('id', newIdPrefix + $(this).attr('id'));
-        });
-    newStatus.attr('id', newIdPrefix + "status");
-    
-    $('#status').before(newStatus);
-    $('#'+newIdPrefix+'title').html(newIdPrefix);
-
-    var ypos = $('#radar').outerHeight()+10;
-    $('.status').each( function() {
-            $(this).css('bottom', ypos);
-            ypos+=$(this).outerHeight()+10;
-        })
-}
-    
-function updateStatus(ship, prefix) {
-    if (ship == null) {
-        $('#'+prefix+'status').hide();
-        return;
-    }
-    
-    $('#'+prefix+'status').show();
-
-    var pos = ship.pos.div(100);
-    $("#pos").text(pos.x.toFixed(2) + ", " + (pos.y*-1).toFixed(2));
-
-    var data = [ship.armor, ship.shield, ship.battleEnergy];
-    var idPrefix = [prefix+"hp", prefix+"shield", prefix+"energy"];
-    
-    for (var i = 0; i < 3; i++) {
-        var asString = data[i].toPrecision(3);
-        if (asString.length < 5) {
-            asString += "&nbsp;".repeat(5 - asString.length);
-        }
-    
-        $("#"+idPrefix[i]).html(asString);
-        $("#"+idPrefix[i]+"Bar").css('width', data[i]);
-        $("#"+idPrefix[i]+"BarBack").css('width', 100-data[i]);
-    }
-}
 function updateRadar() {
     var radar = $("#radar");
     radar.empty();
@@ -143,8 +106,8 @@ function gameloop() {
 function renderAll() {
     updateRadar();
     
-    updateStatus(playerShip, '');
-    updateStatus(playerShip.player.target, 'target');
+    playerStatus.update(playerShip);
+    targetStatus.update(playerShip.player.target);
 
     var viewPortPos = playerShip.pos.neg().add(Point.windowSize().div(2));
     $('#viewport').css(viewPortPos.getAsCSSPosition());

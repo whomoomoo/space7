@@ -10,6 +10,7 @@
 <script src="player.js"> </script>
 <script src="starfield.js"> </script>
 <script src="interactiveSprite.js"> </script>
+<script src="UI.js"> </script>
 <script src="space7.js"> </script>
 
 <style>
@@ -19,8 +20,10 @@
 .interactiveSprite { z-index: 0;}
 .bar { background: #00AA00; width: 100px; height:6px; margin: 0px; padding 0px; border 3px; display: inline-block}
 .ui {z-index: 10; color: #00AA00; font-family: monospace;}
-.status {}
 .screenbox {position: absolute; margin: 0px; padding 0px; border 0px; left: 0; top: 0; width: 100%; height: 100%; background: transperant; }
+.status {font-size: 10px; margin: 10px; position: absolute;}
+.status-title { width: 100%; text-align: center; font-weight: bold }
+.label {display: inline-block}
 </style>
 
 </head>
@@ -33,13 +36,7 @@
 <div id='viewport' class='screenbox' style='overflow: visible;'></div>
 <div id='messageOverlay' class='screenbox ui' style='font-size: 25px;text-align: center;display: table-cell;vertical-align: middle'></div>
 <div id='debug' class='screenbox' style='opacity: 0.5; color: #FFFFFF'></div>
-<div id='status' class='ui status' style='font-size: 10px; margin: 10px; position: absolute; left: 0px; bottom: 130px'>
-<div id='title' style='width: 100%; text-align: center; font-weight: bold;'>Player</div>
-Position <div id='pos' style='display: inline'></div><br>
-Armour: <div id='hp'style='display: inline'></div> <div id='hpBar' class='bar'></div><div id='hpBarBack' class='bar' style='background: #004400;'></div><br>
-Shield: <div id='shield' style='display: inline'></div> <div id='shieldBar' class='bar'></div><div id='shieldBarBack' class='bar' style='background: #004400;'></div><br>
-Energy: <div id='energy' style='display: inline'></div> <div id='energyBar' class='bar'></div><div id='energyBarBack' class='bar' style='background: #004400;'></div><br>
-</div>
+
 <div id='radar' class='ui' style='overflow: hidden; text-align: center; font-size: 10px; position: absolute; left: 0; bottom: 0; width: 120; height: 120; margin: 10px; background: #004400; border: solid 1px #00AA00; opacity: 0.25'></div>
 </body>
 </html>
