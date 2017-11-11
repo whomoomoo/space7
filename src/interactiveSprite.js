@@ -41,7 +41,7 @@ class InteractiveSprite extends Sprite {
     }
 
     _updateShieldRender() {
-        var shieldOpacity = this._shields / (this.properties.shields.max *  2);
+        let shieldOpacity = this._shields / (this.properties.shields.max *  2);
             
         this._shieldElement.css('opacity', Math.floor(shieldOpacity*10)/10);
     }
@@ -53,16 +53,16 @@ class InteractiveSprite extends Sprite {
                 [interactiveSprite.vel, this.vel] = [this.vel, interactiveSprite.vel];
                 
                 // ensure we do not overlap
-                var extraDistNeeded = ((this.radius + interactiveSprite.radius) - interactiveSprite.pos.distance(this.pos))
+                let extraDistNeeded = ((this.radius + interactiveSprite.radius) - interactiveSprite.pos.distance(this.pos))
                 
                 if (interactiveSprite.vel.length + this.vel.length === 0) {
                     // use vector between the two sprites instead
-                    var vector = this.pos.sub(interactiveSprite.pos).normalize()
+                    let vector = this.pos.sub(interactiveSprite.pos).normalize()
 
                     this.move(this.vel.normalize().mult(extraDistNeeded  / 2));
                     interactiveSprite.move(interactiveSprite.vel.normalize().mult(extraDistNeeded / 2));
                 } else {
-                    var weight = this.vel.length / (interactiveSprite.vel.length + this.vel.length)
+                    let weight = this.vel.length / (interactiveSprite.vel.length + this.vel.length)
                     this.move(this.vel.normalize().mult(extraDistNeeded * weight));
                     interactiveSprite.move(interactiveSprite.vel.normalize().mult(extraDistNeeded * (1 - weight)));
                 }
@@ -144,7 +144,7 @@ class InteractiveSprite extends Sprite {
         }
 
         if (this.player != null) {
-            var weaponToFire = this.player.shouldFireWeapon
+            let weaponToFire = this.player.shouldFireWeapon
             if (weaponToFire != null) {
                 this.fire()
             }
@@ -162,21 +162,21 @@ class InteractiveSprite extends Sprite {
     
     fire () {
         if (this.properties.weapon !== undefined && this._fireDelay <= 0 && this._battleEnergy >= this.properties.weapon.damage*this.properties.weapon.pattern.length) {
-            var weaponRadius = Math.max(this.properties.weapon.image.size[0], this.properties.weapon.image.size[1])/2;
+            let weaponRadius = Math.max(this.properties.weapon.image.size[0], this.properties.weapon.image.size[1])/2;
 
-            var direction = Vector.atAngle(this.angle);
+            let direction = Vector.atAngle(this.angle);
 
-            var vel = this.vel.add(direction.mult(this.properties.weapon.velocity))
-            var pos = this.pos.add(direction.mult(this.radius+weaponRadius+1))
+            let vel = this.vel.add(direction.mult(this.properties.weapon.velocity))
+            let pos = this.pos.add(direction.mult(this.radius+weaponRadius+1))
             
             this._fireDelay = (weaponRadius*2.5) / vel.length;
 
-            for (var pattern of this.properties.weapon.pattern) {
-                var pos = this.pos.add(Point.fromArray(pattern)
+            for (let pattern of this.properties.weapon.pattern) {
+                let pos = this.pos.add(Point.fromArray(pattern)
                                 .normalize().rotate(this.angle * Math.PI / 180)
                                 .mult(this.radius+weaponRadius+1));
                 
-                var particle = new InteractiveSprite(pos, this.properties.weapon);
+                let particle = new InteractiveSprite(pos, this.properties.weapon);
                 particle.vel = vel;
                 
                 this._battleEnergy -= this.properties.weapon.damage;

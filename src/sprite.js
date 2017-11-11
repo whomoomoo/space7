@@ -16,7 +16,7 @@ class Sprite {
     set pos (point) { 
         this._pos = point 
 
-        var cssPos = this._pos.sub(this.size.div(2));
+        let cssPos = this._pos.sub(this.size.div(2));
         
         this._element.css(cssPos.getAsCSSPosition());
     }

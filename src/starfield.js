@@ -1,3 +1,5 @@
+const colours = ["0000FF", "999999", "FFFFFF"];
+
 class StarFieldStar extends Sprite {
     constructor(pos, zdistance) {
         super(pos)
@@ -6,8 +8,7 @@ class StarFieldStar extends Sprite {
         this._zdistance = zdistance;
 
         if (zdistance > 2) {
-            var colours = ["0000FF", "999999", "FFFFFF"];
-            var colour = intRand(0, 2);
+            let colour = intRand(0, 2);
             
             this.rootElement.css("width", "2px");
             this.rootElement.css("height", "2px");
@@ -18,8 +19,8 @@ class StarFieldStar extends Sprite {
     }
     
     update(delta) {
-        var vel = StarFieldStar.viewPortVel.mult(delta / this._zdistance * -1);
-        var newPos = this.pos.add(vel);
+        let vel = StarFieldStar.viewPortVel.mult(delta / this._zdistance * -1);
+        let newPos = this.pos.add(vel);
         if (newPos.x > $(window).width()) {
             newPos.x -= $(window).width();
         }
@@ -45,12 +46,12 @@ $(window).resize(
     });
 
 function initStars() {
-    var viewportSize = Point.windowSize().x * Point.windowSize().y;
+    let viewportSize = Point.windowSize().x * Point.windowSize().y;
 
-    for(var i = 0; i < Math.floor(viewportSize/10000); i++){
-        var distance = floatRand(1, StarFieldStar.MaxDistance);
+    for(let i = 0; i < Math.floor(viewportSize/10000); i++){
+        let distance = floatRand(1, StarFieldStar.MaxDistance);
         
-        var star = new StarFieldStar(Point.random(Point.windowSize()), distance);
+        let star = new StarFieldStar(Point.random(Point.windowSize()), distance);
         $('body').append(star.rootElement);
     };
 }

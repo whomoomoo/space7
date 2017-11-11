@@ -1,8 +1,8 @@
 
-var controls = { up: false, down: false, left: false, right: false, fire: false, pause: false, findTarget: false };
+let controls = { up: false, down: false, left: false, right: false, fire: false, pause: false, findTarget: false };
 // key number to action name
-var controlEventMap = {39:'left', 37:'right', 38:'up', 40:'down', 32:'fire', 84:'findTarget', 27:'pause'};
-var controlDesc = [
+let controlEventMap = {39:'left', 37:'right', 38:'up', 40:'down', 32:'fire', 84:'findTarget', 27:'pause'};
+let controlDesc = [
     "--- SPACE 7 Game Keys ---",
     "left arrow key: turn left",
     "right arrow key: turn right", 
@@ -24,7 +24,7 @@ $(document).keydown(
 
 $(document).keyup(
     function(event){
-        var wasPause = controls.pause;
+        let wasPause = controls.pause;
         if (controlEventMap[event.which] !== undefined) {
             controls[ controlEventMap[event.which] ] = false;
         }

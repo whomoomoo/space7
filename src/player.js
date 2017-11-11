@@ -21,8 +21,8 @@ class Player {
     get shouldFireWeapon() { return null }
     
     findTarget() {
-        var interactiveSprites = $('.interactiveSprite');
-        var i = 0;
+        let interactiveSprites = $('.interactiveSprite');
+        let i = 0;
         
         for (i = 0; i < interactiveSprites.length; i++) {
             if($(interactiveSprites[i]).gameData() === this.interactiveSprite){
@@ -30,8 +30,8 @@ class Player {
             }
         }
         
-        for (var j = (i+1)%interactiveSprites.length; j != i; j = (j+1)%interactiveSprites.length) {
-            var otherInteractiveSprites = $(interactiveSprites[j]).gameData();
+        for (let j = (i+1)%interactiveSprites.length; j != i; j = (j+1)%interactiveSprites.length) {
+            let otherInteractiveSprites = $(interactiveSprites[j]).gameData();
             if(otherInteractiveSprites != null &&
                 otherInteractiveSprites.player !== null &&
                 otherInteractiveSprites.player.teamId != this.teamId){
@@ -101,13 +101,13 @@ class DumbAIPlayer extends Player {
     get shouldFireWeapon() { return distance < 150 && Math.abs(angleDiff) < 5 }
     
     computeDestAngle () {
-        var currentAngle = Vector.atAngle(this.interactiveSprite.angle).normalize();
-        var destAngle = this.target.pos.sub(this.interactiveSprite.pos).normalize();
+        let currentAngle = Vector.atAngle(this.interactiveSprite.angle).normalize();
+        let destAngle = this.target.pos.sub(this.interactiveSprite.pos).normalize();
     
         // from cross product
-        var direction = currentAngle.x * destAngle.y - currentAngle.y * destAngle.x;
+        let direction = currentAngle.x * destAngle.y - currentAngle.y * destAngle.x;
         
-        var diffAngle =  Math.radToDeg( Math.acos(currentAngle.dotProduct(destAngle)) );
+        let diffAngle =  Math.radToDeg( Math.acos(currentAngle.dotProduct(destAngle)) );
         
         if (Math.sign(direction) !== 0) {
             return diffAngle * Math.sign(direction);

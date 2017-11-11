@@ -1,13 +1,13 @@
-var playerShip;
-var paused = true;
-var startMenu = true;
-var playerStatus;
-var targetStatus;
+let playerShip;
+let paused = true;
+let startMenu = true;
+let playerStatus;
+let targetStatus;
 
 $(document).ready(
     function() {
         playerShip = new InteractiveSprite(new Point(0,0), ships[0], new HumanPlayer(controls));
-        var otherShip = new InteractiveSprite(new Point(-150,-150), ships[1], new SmartAIPlayer());
+        let otherShip = new InteractiveSprite(new Point(-150,-150), ships[1], new SmartAIPlayer());
         
         $('#viewport').append(playerShip.rootElement, otherShip.rootElement);
 
@@ -27,31 +27,31 @@ $(document).ready(
     });
     
 function updateRadar() {
-    var radar = $("#radar");
+    let radar = $("#radar");
     radar.empty();
     radar.append('RADAR');
     $(".interactiveSprite").each(function() {
-            var colour;
+            let colour;
             if ($(this).gameData() != null) {
                 if ($(this).gameData().player != null) {
                     colour = $(this).gameData().player.teamColour;
                 } else {
                     colour= 'grey';
                 }
-                var pos = $(this).gameData().pos.sub(playerShip.pos).div(50).add(new Point(59, 59));
+                let pos = $(this).gameData().pos.sub(playerShip.pos).div(50).add(new Point(59, 59));
                 radar.append('<div style="position: absolute; background: '+colour+'; left:'+pos.x+'; top:'+pos.y+'; width: 3px; height: 3px; opacity: 1"></div>');
             }
         });
 }
 
-var lastLoopTime = now();
-var lastLoopHadError = false;
-var errorCount = 0;
+let lastLoopTime = now();
+let lastLoopHadError = false;
+let errorCount = 0;
 
 function gameloop() {
     try {
-        var current = now();
-        var delta = (current - lastLoopTime) / 1000;
+        let current = now();
+        let delta = (current - lastLoopTime) / 1000;
         lastLoopTime = current;
         
         if (paused) {
@@ -66,10 +66,10 @@ function gameloop() {
         });
 
         // hit detection
-        var allInteractiveSprites = $(".interactiveSprite");
+        let allInteractiveSprites = $(".interactiveSprite");
         allInteractiveSprites.each( function(index, obj) {
             // all except current + the ones we already checked
-            var restOfTheInteractiveSprites = allInteractiveSprites.slice(index+1);
+            let restOfTheInteractiveSprites = allInteractiveSprites.slice(index+1);
             restOfTheInteractiveSprites.each( function() {
                 // the if catches the case of a deleted (dead) sprite
                 if ($(this).gameData() && $(obj).gameData()) {
@@ -82,7 +82,7 @@ function gameloop() {
         
         lastLoopHadError = false;
     } catch (ex) {
-        var msg = ex;
+        let msg = ex;
         if (ex.stack) {
             msg = ex.stack.replace(/\n/g, "<br>").replace(/ /g, "&nbsp;");
         }
@@ -107,6 +107,6 @@ function renderAll() {
     playerStatus.update(playerShip);
     targetStatus.update(playerShip.player.target);
 
-    var viewPortPos = playerShip.pos.neg().add(Point.windowSize().div(2));
+    let viewPortPos = playerShip.pos.neg().add(Point.windowSize().div(2));
     $('#viewport').css(viewPortPos.getAsCSSPosition());
 }

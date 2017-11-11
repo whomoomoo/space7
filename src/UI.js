@@ -59,13 +59,13 @@ function buildStatusUI (ypos, title) {
             
             statusUI.rootElement.show();
         
-            var pos = ship.pos.div(100);
+            let pos = ship.pos.div(100);
             statusUI.position.label.text(pos.x.toFixed(2) + ", " + (pos.y*-1).toFixed(2));
         
-            var displayInfo = [ [ship.armor, statusUI.armor], [ship.shield, statusUI.shields], [ship.battleEnergy, statusUI.energy]] 
+            let displayInfo = [ [ship.armor, statusUI.armor], [ship.shield, statusUI.shields], [ship.battleEnergy, statusUI.energy]] 
             
-            for (var [data, ui] of displayInfo) {
-                var asString = data.toPrecision(3)
+            for (let [data, ui] of displayInfo) {
+                let asString = data.toPrecision(3)
             
                 ui.label.text(asString);
                 ui.bar.value = data

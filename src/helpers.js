@@ -8,7 +8,7 @@ function now() {
 }
 
 function floatRand(min, max) {
-    var num = max - min + 1;
+    let num = max - min + 1;
     
     return (Math.random() * num)+min;
 }

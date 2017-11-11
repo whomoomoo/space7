@@ -28,13 +28,13 @@ class Point {
         return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
     }
     normalize () {
-            var length = this.length
-            if (length !== 0) {
-                return this.div(length);
-            } else {
-                return this
-            }
+        let length = this.length
+        if (length !== 0) {
+            return this.div(length);
+        } else {
+            return this
         }
+    }
     distance (pt) {
         return this.sub(pt).length;
     }
@@ -71,7 +71,7 @@ class Point {
 
 }
 
-var Vector = {};
+let Vector = {};
 Vector.atAngle = function (angle) {
     return new Point(0, -1).rotate(angle * Math.PI / 180);
 }
