@@ -21,17 +21,6 @@ function boolRand() {
     return intRand(0, 1) === 0;
 }
 
-function parseColour(colourString) {
-    var retval = colourString.match(/(\w\w)(\w\w)(\w\w)/);
-    
-    if (retval != null) {
-        return jQuery.map(retval.slice(1), function (value){ return parseInt(value, 16); });
-    }
-    
-    //errorLog("parseColour can't parse " + colourString);
-    return null;
-}
-
 jQuery.fn.extend({
     playSound : function() {
         return this.each(function() {
