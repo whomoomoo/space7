@@ -83,10 +83,8 @@ function gameloop() {
         lastLoopHadError = false;
     } catch (ex) {
         var msg = ex;
-        if (!isUndef(ex.stack)) {
-            msg = ex.stack;
-            msg = msg.replace(/\n/g, "<br>");
-            msg = msg.replace(/ /g, "&nbsp;");
+        if (ex.stack) {
+            msg = ex.stack.replace(/\n/g, "<br>").replace(/ /g, "&nbsp;");
         }
         logDebug("Error in gameloop: "+msg);
         

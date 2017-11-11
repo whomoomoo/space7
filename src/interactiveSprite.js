@@ -16,7 +16,7 @@ class InteractiveSprite extends Sprite {
             player.interactiveSprite = this             
         }
         
-        if (!isUndef(properties.shields)) {
+        if (properties.shields !== undefined) {
             this._shieldElement = $(document.createElement('img'));
             this._shieldElement.attr('src', 'shield1.png');
             this._shieldElement.addClass('shield');
@@ -26,13 +26,13 @@ class InteractiveSprite extends Sprite {
             this._shields = properties.shields.max;
         }
         
-        if (!isUndef(properties.armor)) {
+        if (properties.armor !== undefined) {
             this._armor = properties.armor;
         }
-        if (!isUndef(properties.battleEnergy)) {
+        if (properties.battleEnergy !== undefined) {
             this._battleEnergy = properties.battleEnergy.max;
         }
-        if (!isUndef(properties.weapon)) {
+        if (properties.weapon != undefined) {
             this.properties.weapon.maxVelocity = properties.weapon.velocity + properties.maxVelocity;
         }
 
@@ -41,7 +41,7 @@ class InteractiveSprite extends Sprite {
     }
 
     _updateShieldRender() {
-        var shieldOpacity = this.shields / (this.properties.shields.max *  2);
+        var shieldOpacity = this._shields / (this.properties.shields.max *  2);
             
         this._shieldElement.css('opacity', Math.floor(shieldOpacity*10)/10);
     }
@@ -97,7 +97,7 @@ class InteractiveSprite extends Sprite {
     }
     
     get damage () {
-        if (isUndef(this.properties.damage)) {
+        if (this.properties.damage === undefined) {
             return 0;
         } else {
             return this.properties.damage;
@@ -150,18 +150,18 @@ class InteractiveSprite extends Sprite {
             }
         }  
         
-        if (!isUndef(this.properties.shields) && this._shields < this.properties.shields.max) {
+        if (this.properties.shields !== undefined && this._shields < this.properties.shields.max) {
             this._shields = Math.min(this.properties.shields.max, this._shields + this.properties.shields.rechargeRate * delta);
             this._updateShieldRender();
         }
         
-        if (!isUndef(this.properties.battleEnergy) && this._battleEnergy < this.properties.battleEnergy.max) {
+        if (this.properties.battleEnergy !== undefined && this._battleEnergy < this.properties.battleEnergy.max) {
             this._battleEnergy = Math.min(this.properties.battleEnergy.max, this._battleEnergy + this.properties.battleEnergy.rechargeRate * delta);
         }
     }
     
     fire () {
-        if (!isUndef(this.properties.weapon) && this._fireDelay <= 0 && this._battleEnergy >= this.properties.weapon.damage*this.properties.weapon.pattern.length) {
+        if (this.properties.weapon !== undefined && this._fireDelay <= 0 && this._battleEnergy >= this.properties.weapon.damage*this.properties.weapon.pattern.length) {
             var weaponRadius = Math.max(this.properties.weapon.image.size[0], this.properties.weapon.image.size[1])/2;
 
             var direction = Vector.atAngle(this.angle);

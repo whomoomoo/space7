@@ -69,7 +69,7 @@ Sprite.foreach = function (fcn, selector = '.sprite') {
 
 jQuery.fn.extend({
     gameData : function() {
-        if (!isUndef(this.data('gameData')) ) {
+        if (this.data('gameData') !== undefined ) {
             return this.data('gameData')
         } else {
             return null

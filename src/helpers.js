@@ -7,10 +7,6 @@ function now() {
     return new Date().getTime();
 }
 
-function isUndef(value) {
-	return typeof value === 'undefined';
-}
-
 function floatRand(min, max) {
     var num = max - min + 1;
     

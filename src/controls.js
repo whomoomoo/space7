@@ -17,7 +17,7 @@ var controlDesc = [
 
 $(document).keydown(
     function(event){
-        if (!isUndef(controlEventMap[event.which])) {
+        if (controlEventMap[event.which] !== undefined) {
             controls[ controlEventMap[event.which] ] = true;
         }
     });
@@ -25,7 +25,7 @@ $(document).keydown(
 $(document).keyup(
     function(event){
         var wasPause = controls.pause;
-        if (!isUndef(controlEventMap[event.which])) {
+        if (controlEventMap[event.which] !== undefined) {
             controls[ controlEventMap[event.which] ] = false;
         }
         
